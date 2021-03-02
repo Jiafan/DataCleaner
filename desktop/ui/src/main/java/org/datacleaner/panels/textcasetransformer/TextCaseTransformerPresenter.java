@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -46,7 +46,9 @@ import org.jdesktop.swingx.JXTaskPane;
 
 public class TextCaseTransformerPresenter extends TransformerComponentBuilderPanel
         implements TransformerComponentBuilderPresenter {
-
+    
+    private static final long serialVersionUID = 1L;
+    
     private static final String TASK_PANE_TITLE_DICTIONARIES = "Dictionaries";
     private final ConfiguredPropertyDescriptor _valueProperty;
     private final ConfiguredPropertyDescriptor _modeProperty;

@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -29,13 +29,6 @@ import org.datacleaner.storage.StorageProvider;
  * @see DataCleanerConfiguration
  */
 public interface DataCleanerEnvironment {
-
-    /**
-     * Gets the {@link RemoteServerConfiguration}.
-     *
-     * @return the box for credentials defined for this environment.
-     */
-    RemoteServerConfiguration getRemoteServerConfiguration();
 
     /**
      * Gets the {@link TaskRunner} defined in this environment

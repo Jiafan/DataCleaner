@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -32,7 +32,6 @@ import javax.swing.border.EmptyBorder;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.metamodel.util.Action;
 import org.datacleaner.actions.DownloadFilesActionListener;
-import org.datacleaner.actions.PublishResultToMonitorActionListener;
 import org.datacleaner.bootstrap.WindowContext;
 import org.datacleaner.panels.DCPanel;
 import org.datacleaner.util.WidgetUtils;
@@ -47,7 +46,6 @@ import org.slf4j.LoggerFactory;
  * download and file handling.
  *
  * @see DownloadFilesActionListener
- * @see PublishResultToMonitorActionListener
  */
 public class FileTransferProgressWindow extends AbstractDialog {
 
@@ -114,7 +112,7 @@ public class FileTransferProgressWindow extends AbstractDialog {
 
     @Override
     protected int getDialogWidth() {
-        return 460;
+        return WidgetUtils.DIALOG_WIDTH_NARROW;
     }
 
     private int getIndex(final String filename) {

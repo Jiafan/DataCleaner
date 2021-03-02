@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -30,6 +30,7 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
@@ -41,6 +42,7 @@ import org.apache.metamodel.data.DataSet;
 import org.apache.metamodel.data.DataSetTableModel;
 import org.apache.metamodel.query.Query;
 import org.apache.metamodel.schema.Column;
+import org.apache.metamodel.schema.Schema;
 import org.apache.metamodel.schema.Table;
 import org.apache.metamodel.util.FileHelper;
 import org.apache.metamodel.util.Resource;
@@ -88,7 +90,7 @@ public abstract class AbstractResourceBasedDatastoreDialog<D extends ResourceDat
      */
     private static final int PREVIEW_COLUMNS = 10;
     private static final int PREVIEW_ROWS = 7;
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(AbstractResourceBasedDatastoreDialog.class);
     private final ResourceSelector _resourceSelector;
     private final DCPanel _previewTablePanel;
     private final DCTable _previewTable;
@@ -193,7 +195,7 @@ public abstract class AbstractResourceBasedDatastoreDialog<D extends ResourceDat
     @Override
     protected int getDialogWidth() {
         if (isPreviewTableEnabled()) {
-            return 650;
+            return WidgetUtils.DIALOG_WIDTH_WIDE;
         }
         return super.getDialogWidth();
     }
@@ -285,10 +287,10 @@ public abstract class AbstractResourceBasedDatastoreDialog<D extends ResourceDat
                 return null;
             }
 
-            Column[] columns = table.getColumns();
-            if (columns.length > getPreviewColumns()) {
+            List<Column> columns = table.getColumns();
+            if (columns.size() > getPreviewColumns()) {
                 // include max 10 columns
-                columns = Arrays.copyOf(columns, getPreviewColumns());
+                columns = columns.stream().limit(getPreviewColumns()).collect(Collectors.toList());
             }
             final Query q = dc.query().from(table).select(columns).toQuery();
             q.setMaxRows(PREVIEW_ROWS);
@@ -359,11 +361,11 @@ public abstract class AbstractResourceBasedDatastoreDialog<D extends ResourceDat
     }
 
     protected Table getPreviewTable(final DataContext dc) {
-        final Table[] tables = dc.getDefaultSchema().getTables();
-        if (tables.length == 0) {
+        final Schema schema = dc.getDefaultSchema();
+        if (schema.getTableCount() == 0) {
             return null;
         }
-        return tables[0];
+        return schema.getTable(0);
     }
 
     protected int getPreviewColumns() {

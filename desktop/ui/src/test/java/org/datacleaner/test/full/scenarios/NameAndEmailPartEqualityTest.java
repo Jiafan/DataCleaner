@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -64,7 +64,7 @@ public class NameAndEmailPartEqualityTest extends TestCase {
 
         final DatastoreConnection con = ds.openConnection();
         final Schema schema = con.getDataContext().getDefaultSchema();
-        final Table table = schema.getTables()[0];
+        final Table table = schema.getTable(0);
         assertNotNull(table);
 
         final Column nameColumn = table.getColumnByName("name");

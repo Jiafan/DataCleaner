@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -19,14 +19,12 @@
  */
 package org.datacleaner.configuration;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.metamodel.DataContext;
@@ -37,16 +35,16 @@ import org.apache.metamodel.schema.Column;
 import org.apache.metamodel.schema.Schema;
 import org.apache.metamodel.schema.Table;
 import org.apache.metamodel.util.ExclusionPredicate;
-import org.apache.metamodel.util.Predicate;
 import org.apache.metamodel.util.SimpleTableDef;
 import org.datacleaner.api.RenderingFormat;
+import org.datacleaner.connection.ArffDatastore;
 import org.datacleaner.connection.CassandraDatastore;
 import org.datacleaner.connection.CouchDbDatastore;
 import org.datacleaner.connection.CsvDatastore;
-import org.datacleaner.connection.DataHubDatastore;
 import org.datacleaner.connection.Datastore;
 import org.datacleaner.connection.DatastoreCatalog;
 import org.datacleaner.connection.DatastoreConnection;
+import org.datacleaner.connection.DynamoDbDatastore;
 import org.datacleaner.connection.ElasticSearchDatastore;
 import org.datacleaner.connection.FixedWidthDatastore;
 import org.datacleaner.connection.HBaseDatastore;
@@ -63,7 +61,6 @@ import org.datacleaner.descriptors.Descriptors;
 import org.datacleaner.descriptors.RendererBeanDescriptor;
 import org.datacleaner.job.concurrent.SingleThreadedTaskRunner;
 import org.datacleaner.lifecycle.LifeCycleHelper;
-import org.datacleaner.metamodel.datahub.DataHubSecurityMode;
 import org.datacleaner.reference.DatastoreDictionary;
 import org.datacleaner.reference.DatastoreSynonymCatalog;
 import org.datacleaner.reference.Dictionary;
@@ -142,12 +139,12 @@ public class JaxbConfigurationReaderTest extends TestCase {
         final DataContext dc = con.getDataContext();
         final Table table = dc.getDefaultSchema().getTable(0);
 
-        final Column[] columns = table.getColumns();
+        final List<Column> columns = table.getColumns();
         assertEquals("[Column[name=Foo,columnNumber=0,type=VARCHAR,nullable=true,nativeType=null,columnSize=null], "
                         + "Column[name=Bar,columnNumber=1,type=MAP,nullable=true,nativeType=null,columnSize=null], "
                         + "Column[name=Baz,columnNumber=2,type=LIST,nullable=true,nativeType=null,columnSize=null], "
                         + "Column[name=bytes,columnNumber=3,type=BINARY,nullable=true,nativeType=null,columnSize=null]]",
-                Arrays.toString(columns));
+                columns.toString());
 
         final DataSet ds = dc.query().from(table).select(columns).execute();
 
@@ -228,12 +225,13 @@ public class JaxbConfigurationReaderTest extends TestCase {
         assertEquals(InMemoryRowAnnotationFactory2.class, rowAnnotationFactory.getClass());
     }
 
+    @SuppressWarnings("deprecation")
     public void testAllDatastoreTypes() throws Exception {
         final DatastoreCatalog datastoreCatalog = getDataStoreCatalog(getConfiguration());
         final String[] datastoreNames = datastoreCatalog.getDatastoreNames();
         assertEquals(
-                "[my cassandra db, my couch, my es index, my hbase, my mongo, my_access, my_composite, my_csv, "
-                        + "my_custom, my_datahub, my_dbase, my_dom_xml, my_excel_2003, my_fixed_width_1, "
+                "[my arff, my cassandra db, my couch, my es index, my hbase, my mongo, my_access, my_composite, my_csv, "
+                        + "my_custom, my_dbase, my_dom_xml, my_dynamo, my_excel_2003, my_fixed_width_1, "
                         + "my_fixed_width_2, my_jdbc_connection, my_jdbc_datasource, my_json, my_odb, my_pojo, "
                         + "my_sas, my_sax_xml, my_sfdc_ds, my_sugarcrm]", Arrays.toString(datastoreNames));
 
@@ -261,10 +259,16 @@ public class JaxbConfigurationReaderTest extends TestCase {
         final ElasticSearchDatastore esDatastore =
                 (ElasticSearchDatastore) datastoreCatalog.getDatastore("my es index");
         assertEquals("localhost", esDatastore.getHostname());
-        assertEquals(new Integer(9300), esDatastore.getPort());
+        assertEquals(9300, esDatastore.getPort().intValue());
         assertEquals("my_es_cluster", esDatastore.getClusterName());
         assertEquals("my_index", esDatastore.getIndexName());
         assertNull(esDatastore.getTableDefs());
+        
+        final DynamoDbDatastore dynamoDatastore = (DynamoDbDatastore) datastoreCatalog.getDatastore("my_dynamo");
+        assertEquals("regionX", dynamoDatastore.getRegion());
+        assertEquals("foo", dynamoDatastore.getAccessKeyId());
+        assertEquals("bar", dynamoDatastore.getSecretAccessKey());
+        assertNull(dynamoDatastore.getTableDefs());
 
         assertEquals("a SugarCRM instance", datastoreCatalog.getDatastore("my_sugarcrm").getDescription());
         assertEquals("dom xml", datastoreCatalog.getDatastore("my_dom_xml").getDescription());
@@ -286,15 +290,15 @@ public class JaxbConfigurationReaderTest extends TestCase {
                 final Schema schema = dc.getDefaultSchema();
                 assertEquals("my_schema", schema.getName());
                 assertEquals(2, schema.getTableCount());
-                assertEquals("[table1, table2]", Arrays.toString(schema.getTableNames()));
+                assertEquals("[table1, table2]", schema.getTableNames().toString());
 
                 assertEquals(
                         "[Column[name=Foo,columnNumber=0,type=VARCHAR,nullable=true,nativeType=null,columnSize=null], "
                                 + "Column[name=Bar,columnNumber=1,type=INTEGER,nullable=true,nativeType=null,columnSize=null]]",
-                        Arrays.toString(schema.getTable(0).getColumns()));
+                        schema.getTable(0).getColumns().toString());
                 assertEquals(
                         "[Column[name=Baz,columnNumber=0,type=BOOLEAN,nullable=true,nativeType=null,columnSize=null]]",
-                        Arrays.toString(schema.getTable(1).getColumns()));
+                        schema.getTable(1).getColumns().toString());
 
                 try (DataSet ds = dc.query().from("table1").select("Foo", "Bar").execute()) {
                     assertTrue(ds.next());
@@ -333,7 +337,7 @@ public class JaxbConfigurationReaderTest extends TestCase {
                 Arrays.toString(tableDefs));
 
         final XmlDatastore xmlDatastore = (XmlDatastore) datastoreCatalog.getDatastore("my_sax_xml");
-        assertEquals("../core/src/test/resources/example-xml-file.xml", xmlDatastore.getFilename());
+        assertEquals("../../datastores/basic-datastores/src/test/resources/example-xml-file.xml", xmlDatastore.getFilename());
         assertEquals("[XmlSaxTableDef[rowXpath=/greetings/greeting,"
                         + "valueXpaths=[/greetings/greeting/how, /greetings/greeting/what]]]",
                 Arrays.toString(xmlDatastore.getTableDefs()));
@@ -363,23 +367,16 @@ public class JaxbConfigurationReaderTest extends TestCase {
 
         final JsonDatastore jsonDatastore = (JsonDatastore) datastoreCatalog.getDatastore("my_json");
         assertEquals("JsonDatastore[name=my_json]", jsonDatastore.toString());
-
-        final DataHubDatastore dataHubDatastore = (DataHubDatastore) datastoreCatalog.getDatastore("my_datahub");
-        assertThat(dataHubDatastore.getName(), is("my_datahub"));
-        assertThat(dataHubDatastore.getHost(), is("hostname"));
-        assertThat(dataHubDatastore.getPort(), is(1234));
-        assertThat(dataHubDatastore.getUsername(), is("user"));
-        assertThat(dataHubDatastore.getPassword(), is("SECRET"));
-        assertThat(dataHubDatastore.isHttps(), is(false));
-        assertThat(dataHubDatastore.isAcceptUnverifiedSslPeers(), is(false));
-        assertThat(dataHubDatastore.getSecurityMode(), is(DataHubSecurityMode.DEFAULT));
+        
+        final ArffDatastore arffDatastore = (ArffDatastore) datastoreCatalog.getDatastore("my arff");
+        assertEquals("example.arff", arffDatastore.getResource().getName());
 
         for (final String name : datastoreNames) {
             // test that all connections, except the JNDI-, MongoDB- and
             // CouchDB-based on will work
             if (!"my_jdbc_datasource".equals(name) && !"my mongo".equals(name) && !"my couch".equals(name)
                     && !"my hbase".equals(name) && !"my_sfdc_ds".equals(name) && !"my_sugarcrm".equals(name)
-                    && !"my es index".equals(name) && !"my_datahub".equals(name)) {
+                    && !"my es index".equals(name) && !"my_dynamo".equals(name)) {
                 final Datastore datastore = datastoreCatalog.getDatastore(name);
                 final DataContext dc;
                 try {
@@ -396,8 +393,8 @@ public class JaxbConfigurationReaderTest extends TestCase {
         {
             try (DatastoreConnection con = compositeDatastore.openConnection()) {
                 final DataContext dataContext = con.getDataContext();
-                final String[] schemaNames = dataContext.getSchemaNames();
-                assertEquals("[PUBLIC, Spreadsheet2003.xls, developers.mdb, resources]", Arrays.toString(schemaNames));
+                final List<String> schemaNames = dataContext.getSchemaNames();
+                assertEquals("[PUBLIC, Spreadsheet2003.xls, developers.mdb, resources]", schemaNames.toString());
             }
         }
     }
@@ -541,40 +538,6 @@ public class JaxbConfigurationReaderTest extends TestCase {
 
     private DataCleanerConfiguration getConfigurationFromXMLFile() {
         return reader.create(new File("src/test/resources/example-configuration-all-reference-data-types.xml"));
-    }
-
-    public void testRemoteServerConfiguration() throws Exception {
-        final DataCleanerConfiguration configuration =
-                reader.create(new File("src/test/resources/example-configuration-remote-servers.xml"));
-        final RemoteServerConfiguration remoteConf = configuration.getEnvironment().getRemoteServerConfiguration();
-        Assert.assertEquals(false, remoteConf.getServerList().isEmpty());
-        Assert.assertEquals(3, remoteConf.getServerList().size());
-
-        final RemoteServerData server0 = remoteConf.getServerList().get(0);
-        Assert.assertEquals("server1", server0.getServerName());
-        Assert.assertEquals("http://host1:8888", server0.getUrl());
-        Assert.assertEquals("totoro", server0.getUsername());
-        Assert.assertEquals("admin", server0.getPassword());
-
-        final RemoteServerData server1 = remoteConf.getServerList().get(1);
-        Assert.assertEquals("serverHost2", server1.getServerName());
-        Assert.assertEquals("http://host2:8888", server1.getUrl());
-        Assert.assertEquals("momo", server1.getUsername());
-        Assert.assertEquals("admin", server1.getPassword());
-
-        final RemoteServerData server2 = remoteConf.getServerList().get(2);
-        Assert.assertEquals("serverHost3", server2.getServerName());
-        Assert.assertEquals("http://host3:8888", server2.getUrl());
-        Assert.assertEquals("momo", server2.getUsername());
-        Assert.assertEquals("admin", server2.getPassword());
-    }
-
-    public void testRemoteServerConfigurationDefault() throws Exception {
-        final DataCleanerConfiguration configuration =
-                reader.create(new File("src/test/resources/example-configuration-remote-servers-empty.xml"));
-        final RemoteServerConfiguration remoteConf = configuration.getEnvironment().getRemoteServerConfiguration();
-        Assert.assertEquals(true, remoteConf.getServerList().isEmpty());
-        Assert.assertEquals(0, remoteConf.getServerList().size());
     }
 
     public void testServerConfigurations() {

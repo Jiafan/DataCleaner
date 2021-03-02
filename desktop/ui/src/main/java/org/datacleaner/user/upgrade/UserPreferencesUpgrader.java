@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -54,7 +54,6 @@ class UserPreferencesUpgrader {
 
         // copy the relevant parts of the user prefs
         newUserPreferences.getAdditionalProperties().putAll(oldUserPreferences.getAdditionalProperties());
-        newUserPreferences.setMonitorConnection(oldUserPreferences.getMonitorConnection());
         newUserPreferences.setProxyAuthenticationEnabled(oldUserPreferences.isProxyAuthenticationEnabled());
         newUserPreferences.setProxyEnabled(oldUserPreferences.isProxyEnabled());
         newUserPreferences.setProxyHostname(oldUserPreferences.getProxyHostname());

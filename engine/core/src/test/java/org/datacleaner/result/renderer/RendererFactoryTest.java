@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -41,8 +41,8 @@ public class RendererFactoryTest extends TestCase {
         final ClasspathScanDescriptorProvider descriptorProvider =
                 new ClasspathScanDescriptorProvider().scanPackage("org.datacleaner.result.renderer", true);
 
-        @SuppressWarnings("deprecation") final RendererFactory rendererFactory = new RendererFactory(
-                new org.datacleaner.configuration.AnalyzerBeansConfigurationImpl().replace(descriptorProvider));
+        final RendererFactory rendererFactory = new RendererFactory(new DataCleanerConfigurationImpl()
+                .withEnvironment(new DataCleanerEnvironmentImpl().withDescriptorProvider(descriptorProvider)));
         Renderer<?, ? extends CharSequence> renderer;
 
         renderer = rendererFactory.getRenderer(new NumberResult(1), TextRenderingFormat.class);

@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -35,6 +35,7 @@ import org.datacleaner.descriptors.ConfiguredPropertyDescriptor;
 import org.datacleaner.job.builder.ComponentBuilder;
 import org.datacleaner.util.DCDocumentListener;
 import org.datacleaner.util.WidgetFactory;
+import org.datacleaner.util.WidgetUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
@@ -82,6 +83,7 @@ public class SingleStringPropertyWidget extends AbstractPropertyWidget<String> {
         if (multiline) {
             if (mimeType != null) {
                 final RSyntaxTextArea syntaxArea = new RSyntaxTextArea(8, 17);
+                syntaxArea.setFont(WidgetUtils.FONT_MONOSPACE);
                 syntaxArea.setTabSize(2);
                 syntaxArea.setSyntaxEditingStyle(mimeType);
                 textComponent = syntaxArea;

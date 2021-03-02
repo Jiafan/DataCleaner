@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -38,31 +38,6 @@ public class OpenAnalysisResultTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         System.setProperty(AbstractWindow.SYSTEM_PROPERTY_HIDE_WINDOWS, "true");
-    }
-
-    /**
-     * A very broad integration test which opens a result with (more or less)
-     * all built-in analyzer results.
-     *
-     * @throws Exception
-     */
-    public void testOpenJobWithAllAnalyzers() throws Exception {
-        if (GraphicsEnvironment.isHeadless()) {
-            System.out.println("!!! Skipping test because environment is headless: " + getName());
-            return;
-        }
-
-        final DCModule module = new DCModuleImpl();
-
-        final FileObject file =
-                VFSUtils.getFileSystemManager().resolveFile("src/test/resources/all_analyzers.analysis.result.dat");
-
-        final OpenAnalysisJobActionListener listener =
-                new OpenAnalysisJobActionListener(null, null, null, null, new UserPreferencesImpl(null));
-        final ResultWindow window = listener.openAnalysisResult(file, module);
-        assertNotNull(window);
-
-        assertEquals("all_analyzers.analysis.result.dat | Analysis results", window.getWindowTitle());
     }
 
     public void testDensityPlotVisualizationComponentLoading() throws Exception {

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.eobjects.datacleaner</groupId>
 		<artifactId>DataCleaner-components</artifactId>
-		<version>5.1.6-SNAPSHOT</version>
+		<version>5.7.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>DataCleaner-standard-components</artifactId>
 	<packaging>jar</packaging>
@@ -33,7 +33,11 @@
 			<artifactId>DataCleaner-fuse</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.eobjects.datacleaner</groupId>
+			<artifactId>DataCleaner-machine-learning</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eobjects.datacleaner</groupId>
 			<artifactId>DataCleaner-http</artifactId>
@@ -91,6 +95,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eobjects.datacleaner</groupId>
+			<artifactId>DataCleaner-mark-rows</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eobjects.datacleaner</groupId>
 			<artifactId>DataCleaner-el</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -111,6 +120,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eobjects.datacleaner</groupId>
+			<artifactId>DataCleaner-groovy</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eobjects.datacleaner</groupId>
 			<artifactId>DataCleaner-writers</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -127,6 +141,11 @@
 		<dependency>
 			<groupId>org.eobjects.datacleaner</groupId>
 			<artifactId>DataCleaner-data-structures</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eobjects.datacleaner</groupId>
+			<artifactId>DataCleaner-fill-pattern</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

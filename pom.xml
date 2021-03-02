@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- Maven plugin versions -->
-		<javadoc.version>2.10.3</javadoc.version>
+		<javadoc.version>3.0.1</javadoc.version>
 
 		<!-- Dependency versions -->
-		<scala.version>2.11.4</scala.version>
-		<slf4j.version>1.7.10</slf4j.version>
-		<junit.version>4.12</junit.version>
-		<hadoop.version>2.7.1</hadoop.version>
-		<spark.version>1.6.1</spark.version>
-		<easymock.version>3.4</easymock.version>
-		<httpcomponents.version>4.4.1</httpcomponents.version>
-		<guava.version>16.0.1</guava.version>
-		<curator.version>2.6.0</curator.version>
-		<metamodel.version>4.5.4</metamodel.version>
-		<metamodel.extras.version>4.4.0</metamodel.extras.version>
-		<gwt.version>2.7.0</gwt.version>
-		<spring.core.version>4.1.9.RELEASE</spring.core.version>
-		<spring.security.version>3.2.9.RELEASE</spring.security.version>
-		<quartz.version>2.1.7</quartz.version>
-		<freemarker.version>2.3.22</freemarker.version>
-		<icu4j.version>55.1</icu4j.version>
-		<jackson.version>2.7.3</jackson.version>
-		<javax.servlet.version>3.0.1</javax.servlet.version>
-		<javax.jsp.version>2.3.1</javax.jsp.version>
+		<slf4j.version>1.7.30</slf4j.version>
+		<junit.version>4.13.1</junit.version>
+		<easymock.version>3.6</easymock.version>
+		<httpcomponents.version>4.5.5</httpcomponents.version>
+		<metamodel.version>5.3.2</metamodel.version>
+		<metamodel.extras.version>5.2.0</metamodel.extras.version>
+		<spring.core.version>4.3.26.RELEASE</spring.core.version>
+		<freemarker.version>2.3.29</freemarker.version>
+		<icu4j.version>65.1</icu4j.version>
+		<jackson.version>2.12.1</jackson.version>
+		<javax.servlet.version>3.1.0</javax.servlet.version>
 		<javax.el.version>2.2.5</javax.el.version>
 		<javax.annotation.version>1.2</javax.annotation.version>
-		<jersey.version>1.19</jersey.version>
-		<commons.collection.version>3.2.2</commons.collection.version>
-		<ocpsoft.rewrite.version>2.0.12.Final</ocpsoft.rewrite.version>
+		<scala.version>2.12.11</scala.version>
+		<jung.version>2.1.1</jung.version>
+		<guava.version>27.0.1-jre</guava.version>
+		<hadoop.version>3.1.1</hadoop.version>
+		<spark.version>2.4.4</spark.version>
+		<curator.version>2.13.0</curator.version>
 	</properties>
 	<parent>
 		<!-- Uses the OSS sonatype nexus repository for distribution -->
@@ -42,17 +37,17 @@
 		<artifactId>oss-parent</artifactId>
 		<version>9</version>
 	</parent>
-	
+
 	<groupId>org.eobjects.datacleaner</groupId>
 	<artifactId>DataCleaner</artifactId>
-	<version>5.1.6-SNAPSHOT</version>
+	<version>5.7.2-SNAPSHOT</version>
 	<name>DataCleaner parent</name>
 	<description>DataCleaner is the premier open source data quality solution. Use it to
 		discover, analyze, profile, diagnose and monitor the state of your data. DataCleaner works with
 		almost any kind of data, eg. CSV files, databases, Excel spreadsheets, NoSQL databases and more.</description>
-	<url>https://datacleaner.org</url>
+	<url>https://datacleaner.github.io</url>
 	<packaging>pom</packaging>
-	
+
 	<profiles>
 		<profile>
 			<!-- Default profile -->
@@ -62,12 +57,13 @@
 			</activation>
 			<modules>
 				<module>api</module>
+				<module>datastores</module>
+				<module>oss-branding</module>
 				<module>resources</module>
 				<module>testware</module>
 				<module>engine</module>
 				<module>components</module>
 				<module>desktop</module>
-				<module>monitor</module>
 			</modules>
 		</profile>
 		<profile>
@@ -75,34 +71,26 @@
 			<id>quick</id>
 			<modules>
 				<module>api</module>
+				<module>datastores</module>
+				<module>oss-branding</module>
 				<module>resources</module>
 				<module>testware</module>
 				<module>engine</module>
 				<module>components</module>
 				<module>desktop</module>
-				<module>monitor</module>
 			</modules>
 		</profile>
 		<profile>
 			<id>desktop</id>
 			<modules>
 				<module>api</module>
+				<module>datastores</module>
+				<module>oss-branding</module>
 				<module>resources</module>
 				<module>testware</module>
 				<module>engine</module>
 				<module>components</module>
 				<module>desktop</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>monitor</id>
-			<modules>
-				<module>api</module>
-				<module>resources</module>
-				<module>testware</module>
-				<module>engine</module>
-				<module>components</module>
-				<module>monitor</module>
 			</modules>
 		</profile>
 		<profile>
@@ -259,28 +247,16 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/datacleaner/DataCleaner</url>
-		<connection>scm:git:https://github.com/datacleaner/DataCleaner.git</connection>
-		<developerConnection>scm:git:https://github.com/datacleaner/DataCleaner.git</developerConnection>
+		<connection>scm:git:git@github.com:datacleaner/DataCleaner.git</connection>
+		<developerConnection>scm:git:git@github.com:datacleaner/DataCleaner.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
-	<mailingLists>
-		<mailingList>
-			<name>DataCleaner-dev mailing list</name>
-			<archive>http://groups.google.com/group/datacleaner-dev</archive>
-			<post>datacleaner-dev@googlegroups.com</post>
-		</mailingList>
-		<mailingList>
-			<name>DataCleaner-announce mailing list</name>
-			<archive>http://groups.google.com/group/datacleaner-announce</archive>
-			<post>datacleaner-announce@googlegroups.com</post>
-		</mailingList>
-	</mailingLists>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.7.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -318,13 +294,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
+				<version>2.21.0</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.2.0</version>
 			</plugin>
 
 			<plugin>
@@ -346,7 +322,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5</version><!--$NO-MVN-MAN-VER$ -->
+				<version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<goals>deploy</goals>
@@ -355,7 +331,7 @@
 					<dependency>
 						<groupId>org.apache.maven.scm</groupId>
 						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>1.9.1</version>
+						<version>1.9.5</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -387,14 +363,30 @@
 							<rules>
 								<bannedDependencies>
 									<excludes>
-										<exclude>commons-logging:commons-logging</exclude>
-										<exclude>com.google.collections:google-collections</exclude>
-										<exclude>javax.servlet:servlet-api:*:jar:compile</exclude>
+										<exclude>commons-logging:commons-logging:*</exclude>
+										<exclude>com.google.collections:google-collections:*</exclude>
+										<exclude>javax.servlet:servlet-api:*:jar:compile:*</exclude>
+										<exclude>org.glassfish:javax.servlet:*</exclude>
+										<exclude>org.mortbay.jetty:servlet-api:*</exclude>
+										<exclude>org.mortbay.jetty:servlet-api-2.5:*</exclude>
+										<exclude>org.eclipse.jetty.orbit:javax.servlet:*</exclude>
+										<exclude>ant:ant:*</exclude>
+
+										<exclude>org.datanucleus:javax.jdo:*</exclude>
+										
+										<!-- Prefer javax.transaction:javax.transaction-api over javax.transaction:jta -->
+										<exclude>javax.transaction:jta:*</exclude>
+										<exclude>javax.transaction:transaction-api:*</exclude>
 										
 										<!-- The proper artifact for JSP API is javax.servlet.jsp:javax.servlet.jsp-api, so we're banning the rest -->
 										<exclude>javax.servlet:jsp-api:*</exclude>
 										<exclude>javax.servlet.jsp:jsp-api:*</exclude>
+										<exclude>org.mortbay.jetty:jsp-api-2.1:*</exclude>
+										<exclude>org.mortbay.jetty:jsp-2.1:*</exclude>
 										
+										<!-- The propert artifact for JDO is javax.jdo:jdo-api, so we're banning the rest -->
+										<exclude>org.datanucleaus:javax.jdo</exclude>
+
 										<exclude>org.mortbay.jetty:servlet-api:*:*:compile</exclude>
 										<exclude>org.eclipse.jetty.aggregate:jetty-all:*:jar:compile</exclude>
 										<exclude>org.mortbay.jetty:jetty:*:jar:compile</exclude>
@@ -419,10 +411,6 @@
 										<exclude>org.glassfish.hk2.*</exclude>
 										<exclude>org.glassfish.hk2.external:*</exclude>
 
-										<!-- Jersey 2 excluded due to conflicts with Jersey 1 (which is 
-											required by Hadoop) -->
-										<exclude>org.glassfish.jersey:*</exclude>
-
 										<!-- asm groupId is conflicting with org.ow2.asm groupId -->
 										<exclude>asm:asm:*</exclude>
 
@@ -430,7 +418,8 @@
 										<exclude>com.github.stephenc.findbugs:findbugs-annotations:*</exclude>
 
 										<!-- jcip-annotations is overlapping with annotations -->
-										<exclude>net.jcip:jcip-annotations</exclude>
+										<exclude>net.jcip:jcip-annotations:*</exclude>
+										<exclude>com.github.stephenc.jcip:jcip-annotations:*</exclude>
 										
 										<!-- xml-apis is shipped with the JRE -->
 										<exclude>xml-apis:xml-apis:*</exclude>
@@ -442,38 +431,18 @@
 
 										<!-- stax-api is overlapping with xml-apis -->
 										<exclude>stax:stax-api:*</exclude>
-										<exclude>javax.xml.stream:stax-api</exclude>
+										<exclude>javax.xml.stream:stax-api:*</exclude>
 
 										<!-- standard is overlapping with jstl -->
 										<exclude>taglibs:standard:*</exclude>
 
 										<!-- org.apache.geronimo.bundles:json is overlapping with org.json:json -->
 										<exclude>org.apache.geronimo.bundles:json:*</exclude>
+
+										<exclude>com.sun.xml.ws:jaxws-rt:*</exclude>
 									</excludes>
 								</bannedDependencies>
 							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>run-checkstyle</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>checkstyle</goal>
-						</goals>
-						<configuration>
-							<configLocation>checkstyle.xml</configLocation>
-							<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-							<consoleOutput>true</consoleOutput>
-							<includeTestSourceDirectory>true</includeTestSourceDirectory>
-							<encoding>UTF-8</encoding>
-							<failsOnError>true</failsOnError>
-							<linkXRef>false</linkXRef>
 						</configuration>
 					</execution>
 				</executions>
@@ -482,18 +451,6 @@
 
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.17</version>
-					<dependencies>
-						<dependency>
-							<groupId>com.puppycrawl.tools</groupId>
-							<artifactId>checkstyle</artifactId>
-							<version>7.2</version>
-						</dependency>
-					</dependencies>
-				</plugin>
 				<plugin>
 					<!-- Ignore instructions for m2e (overrides eclipse warning) -->
 					<groupId>org.eclipse.m2e</groupId>
@@ -550,7 +507,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>1.3.1</version>
+					<version>1.4.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jboss.tattletale</groupId>
@@ -578,7 +535,7 @@
 				<plugin>
 					<groupId>net.alchim31.maven</groupId>
 					<artifactId>scala-maven-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.4.6</version>
 					<executions>
 						<execution>
 							<id>scala-compile-first</id>
@@ -608,7 +565,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>2.6</version>
+					<version>2.9</version>
 				</plugin>
 
 				<plugin>
@@ -623,31 +580,34 @@
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
 					<artifactId>maven-jaxb2-plugin</artifactId>
-					<version>0.11.0</version>
+					<version>0.13.3</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.7</version>
+					<version>3.0.0</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.5</version>
+					<version>3.1.0</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.4</version>
+					<version>3.1.0</version>
+					<configuration>
+						<attach>false</attach>
+					</configuration>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.4</version>
+					<version>3.7</version>
 					<configuration>
 						<skip>true</skip>
 					</configuration>
@@ -656,7 +616,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>3.0.1</version>
 				</plugin>
 
 			</plugins>
@@ -681,7 +641,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
+				<version>2.9</version>
 				<configuration>
 					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
 					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
@@ -730,12 +690,83 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.metamodel</groupId>
-				<artifactId>MetaModel-full</artifactId>
+				<artifactId>MetaModel-csv</artifactId>
 				<version>${metamodel.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.metamodel</groupId>
-				<artifactId>MetaModel-csv</artifactId>
+				<artifactId>MetaModel-arff</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-cassandra</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-fixedwidth</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-pojo</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-openoffice</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-salesforce</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-sugarcrm</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-xml</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-jdbc</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-elasticsearch-rest</artifactId>
+				<version>${metamodel.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.elasticsearch</groupId>
+						<artifactId>elasticsearch</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-mongodb-mongo3</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-couchdb</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-dynamodb</artifactId>
+				<version>${metamodel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.metamodel</groupId>
+				<artifactId>MetaModel-kafka</artifactId>
 				<version>${metamodel.version}</version>
 			</dependency>
 			<dependency>
@@ -787,11 +818,6 @@
 				<version>${metamodel.extras.version}</version>
 			</dependency>
 			<dependency>
- 				<groupId>org.apache.metamodel</groupId>
- 				<artifactId>MetaModel-fixedwidth</artifactId>
- 				<version>${metamodel.version}</version>
- 			</dependency>
-			<dependency>
 				<groupId>org.eobjects.metamodel-extras</groupId>
 				<artifactId>MetaModel-extras-dbase</artifactId>
 				<version>${metamodel.extras.version}</version>
@@ -802,9 +828,39 @@
 				<version>${metamodel.extras.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>1.19</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.transaction</groupId>
+				<artifactId>javax.transaction-api</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.activation</groupId>
+				<artifactId>activation</artifactId>
+				<version>1.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.xml.ws</groupId>
+				<artifactId>jaxws-api</artifactId>
+				<version>2.3.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -845,6 +901,17 @@
 				<groupId>org.apache.hadoop</groupId>
 				<artifactId>hadoop-auth</artifactId>
 				<version>${hadoop.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.github.stephenc.jcip</groupId>
+						<artifactId>jcip-annotations</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-yarn-registry</artifactId>
+				<version>${hadoop.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.hadoop</groupId>
@@ -878,7 +945,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.spark</groupId>
-				<artifactId>spark-yarn_2.11</artifactId>
+				<artifactId>spark-yarn_2.12</artifactId>
 				<version>${spark.version}</version>
 				<scope>provided</scope>
 				<exclusions>
@@ -902,11 +969,27 @@
 						<groupId>asm</groupId>
 						<artifactId>asm</artifactId>
 					</exclusion>
+					<exclusion>
+						<groupId>org.glassfish</groupId>
+						<artifactId>javax.servlet</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.eclipse.jetty.orbit</groupId>
+						<artifactId>javax.servlet</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.glassfish.hk2.external</groupId>
+						<artifactId>aopalliance-repackaged</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.glassfish.hk2.external</groupId>
+						<artifactId>javax.inject</artifactId>
+					</exclusion>
 				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.spark</groupId>
-				<artifactId>spark-launcher_2.11</artifactId>
+				<artifactId>spark-launcher_2.12</artifactId>
 				<version>${spark.version}</version>
 				<exclusions>
 					<exclusion>
@@ -1007,11 +1090,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>${httpcomponents.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient-cache</artifactId>
 				<version>${httpcomponents.version}</version>
 				<exclusions>
@@ -1025,11 +1103,6 @@
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpmime</artifactId>
 				<version>${httpcomponents.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>javax.servlet.jsp-api</artifactId>
-				<version>${javax.jsp.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.el</groupId>
@@ -1046,12 +1119,6 @@
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${javax.servlet.version}</version>
 			</dependency>
-			<!-- Pretty faces - URL rewriting for JSF 2.x -->
-			<dependency>
-				<groupId>org.ocpsoft.rewrite</groupId>
-				<artifactId>rewrite-servlet</artifactId>
-				<version>${ocpsoft.rewrite.version}</version>
-			</dependency>
 			<!-- JDBC drivers -->
 			<dependency>
 				<groupId>net.sourceforge.jtds</groupId>
@@ -1061,7 +1128,7 @@
 			<dependency>
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>9.3-1102-jdbc4</version>
+				<version>42.2.11</version>
 			</dependency>
 			<dependency>
 				<groupId>com.h2database</groupId>
@@ -1069,13 +1136,86 @@
 				<version>1.3.176</version>
 			</dependency>
 			<dependency>
+				<groupId>hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>1.8.0.10</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.hive</groupId>
 				<artifactId>hive-jdbc</artifactId>
-				<version>1.2.1</version>
+				<version>2.3.6</version>
 				<exclusions>
+					<exclusion>
+						<groupId>com.tdunning</groupId>
+						<artifactId>json</artifactId>
+					</exclusion>
 					<exclusion>
 						<groupId>jdk.tools</groupId>
 						<artifactId>jdk.tools</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.github.stephenc.findbugs</groupId>
+						<artifactId>findbugs-annotations</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.github.stephenc.jcip</groupId>
+						<artifactId>jcip-annotations</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>jsp-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.servlet.jsp</groupId>
+						<artifactId>jsp-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>jsp-api-2.1</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>jsp-2.1</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.datanucleus</groupId>
+						<artifactId>javax.jdo</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.zaxxer</groupId>
+						<artifactId>HikariCP-java7</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.transaction</groupId>
+						<artifactId>jta</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.transaction</groupId>
+						<artifactId>transaction-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.eclipse.jetty.orbit</groupId>
+						<artifactId>javax.servlet</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>servlet-api-2.5</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.eclipse.jetty</groupId>
+						<artifactId>jsp-api-2.1</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>tomcat</groupId>
+						<artifactId>jasper-compiler</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>tomcat</groupId>
+						<artifactId>jasper-runtime</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>jline</groupId>
+						<artifactId>jline</artifactId>
 					</exclusion>
 					<exclusion>
 						<groupId>commons-logging</groupId>
@@ -1114,6 +1254,18 @@
 						<artifactId>log4j</artifactId>
 					</exclusion>
 					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-1.2-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-web</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+					<exclusion>
 						<groupId>org.slf4j</groupId>
 						<artifactId>slf4j-log4j12</artifactId>
 					</exclusion>
@@ -1130,14 +1282,15 @@
 						<artifactId>jaxb-impl</artifactId>
 					</exclusion>
 					<exclusion>
-						<groupId>javax.xml.bind</groupId>
-						<artifactId>jaxb-api</artifactId>
-					</exclusion>
-					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>apache-log4j-extras</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-all</artifactId>
+				<version>4.1.42.Final</version>
 			</dependency>
 
 			<dependency>
@@ -1148,7 +1301,13 @@
 			<dependency>
 				<groupId>commons-beanutils</groupId>
 				<artifactId>commons-beanutils</artifactId>
-				<version>1.9.2</version>
+				<version>1.9.4</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-logging</artifactId>
+						<groupId>commons-logging</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>commons-pool</groupId>
@@ -1230,14 +1389,35 @@
 				<version>${icu4j.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>net.sf.jung</groupId>
+				<artifactId>jung-visualization</artifactId>
+				<version>${jung.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.jung</groupId>
+				<artifactId>jung-graph-impl</artifactId>
+				<version>${jung.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.jung</groupId>
+				<artifactId>jung-io</artifactId>
+				<version>${jung.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>stax</groupId>
+						<artifactId>stax-api</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
 				<groupId>org.scala-lang</groupId>
 				<artifactId>scala-library</artifactId>
 				<version>${scala.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.scala-lang.modules</groupId>
-				<artifactId>scala-xml_2.11</artifactId>
-				<version>1.0.2</version>
+				<artifactId>scala-xml_2.12</artifactId>
+				<version>1.3.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.scala-lang</groupId>
@@ -1283,12 +1463,6 @@
 				<artifactId>freemarker</artifactId>
 				<version>${freemarker.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>${commons.collection.version}</version>
-			</dependency>
-
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -1312,18 +1486,8 @@
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.module</groupId>
-				<artifactId>jackson-module-scala_2.11</artifactId>
+				<artifactId>jackson-module-scala_2.12</artifactId>
 				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-client</artifactId>
-				<version>${jersey.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-core</artifactId>
-				<version>${jersey.version}</version>
 			</dependency>
 
 			<!-- logging dependencies -->
@@ -1362,114 +1526,11 @@
 				<artifactId>jcl-over-slf4j</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring.core.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.core.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.core.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-tx</artifactId>
-				<version>${spring.core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.core.version}</version>
-			</dependency>
 
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-cas</artifactId>
-				<version>${spring.security.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>net.jcip</groupId>
-						<artifactId>jcip-annotations</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>xml-apis</groupId>
-						<artifactId>xml-apis</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>xerces</groupId>
-						<artifactId>xercesImpl</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib-nodep</artifactId>
 				<version>2.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-core</artifactId>
-				<version>${spring.security.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-web</artifactId>
-				<version>${spring.security.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.springframework</groupId>
-						<artifactId>spring-aop</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-config</artifactId>
-				<version>${spring.security.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.springframework</groupId>
-						<artifactId>spring-aop</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.quartz-scheduler</groupId>
-				<artifactId>quartz</artifactId>
-				<version>${quartz.version}</version>
 			</dependency>
 
 			<!-- Test dependencies -->
@@ -1491,9 +1552,15 @@
 				<version>3.0.1</version>
 			</dependency>
 			<dependency>
+				<groupId>org.scalatestplus</groupId>
+				<artifactId>junit-4-12_2.12</artifactId>
+				<version>3.1.2.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.scalatest</groupId>
-				<artifactId>scalatest_2.11</artifactId>
-				<version>2.2.0</version>
+				<artifactId>scalatest_2.12</artifactId>
+				<version>3.1.2</version>
 				<scope>test</scope>
 				<exclusions>
 					<exclusion>
@@ -1521,12 +1588,6 @@
 						<groupId>commons-logging</groupId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>com.jayway.jsonpath</groupId>
-				<artifactId>json-path</artifactId>
-				<version>2.1.0</version>
-				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

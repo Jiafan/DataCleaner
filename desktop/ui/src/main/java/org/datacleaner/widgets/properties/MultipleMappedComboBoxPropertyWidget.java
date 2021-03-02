@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -21,11 +21,13 @@ package org.datacleaner.widgets.properties;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
@@ -133,6 +135,10 @@ public class MultipleMappedComboBoxPropertyWidget extends MultipleInputColumnsPr
         return _mappedComboBoxPropertyWidget;
     }
 
+    public Map<InputColumn<?>, DCGroupComboBox> getMappedComboBoxes() {
+        return _mappedComboBoxes;
+    }
+
     @Override
     protected boolean isAllInputColumnsSelectedIfNoValueExist() {
         return false;
@@ -175,13 +181,14 @@ public class MultipleMappedComboBoxPropertyWidget extends MultipleInputColumnsPr
         final HashMap<String, Set<HasColumnMeaning>> groupedMeanings = new HashMap<>();
         final String nullCategory = "Meanings";
 
-        for (final HasColumnMeaning meaning : _availableColumnMeanings.getSortedColumnMeanings()) {
+        for (final HasColumnMeaning meaning : _availableColumnMeanings.getColumnMeanings()) {
             final String categoryName = meaning.getGroup() == null ? nullCategory : meaning.getGroup();
 
             if (groupedMeanings.containsKey(categoryName)) {
                 groupedMeanings.get(categoryName).add(meaning);
             } else {
-                final Set<HasColumnMeaning> categorySet = new HashSet<>();
+                final Set<HasColumnMeaning> categorySet =
+                        new TreeSet<>(Comparator.comparing(HasColumnMeaning::getName, String.CASE_INSENSITIVE_ORDER));
                 categorySet.add(meaning);
                 groupedMeanings.put(categoryName, categorySet);
             }
@@ -226,6 +233,12 @@ public class MultipleMappedComboBoxPropertyWidget extends MultipleInputColumnsPr
         panel.add(checkBox, BorderLayout.CENTER);
         panel.add(comboBox, BorderLayout.EAST);
         return panel;
+    }
+
+    @Override
+    protected void onValuesBatchSelected(final List<InputColumn<?>> values) {
+        _mappedComboBoxes.values().forEach(cb -> cb.setVisible(false));
+        values.stream().map(_mappedComboBoxes::get).filter(Objects::nonNull).forEach(cb -> cb.setVisible(true));
     }
 
     @Override

@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -41,7 +41,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.metamodel.DataContext;
-import org.apache.metamodel.DataContextFactory;
+import org.apache.metamodel.csv.CsvConfiguration;
+import org.apache.metamodel.csv.CsvDataContext;
 import org.apache.metamodel.data.DataSet;
 import org.apache.metamodel.data.Row;
 import org.apache.metamodel.query.Query;
@@ -60,7 +61,6 @@ import org.datacleaner.util.WidgetFactory;
 import org.datacleaner.util.WidgetUtils;
 import org.datacleaner.widgets.DCLabel;
 import org.datacleaner.widgets.DCListCellRenderer;
-import org.datacleaner.widgets.NeopostToolbarButton;
 import org.datacleaner.widgets.tabs.CloseableTabbedPane;
 import org.jdesktop.swingx.HorizontalLayout;
 import org.jdesktop.swingx.VerticalLayout;
@@ -92,8 +92,8 @@ public class AboutDialog extends AbstractDialog {
             throw new IllegalStateException("Could not find dependencies file");
         }
         try {
-            final DataContext dc = DataContextFactory.createCsvDataContext(url.openStream(), ',', '"');
-            final Table table = dc.getDefaultSchema().getTables()[0];
+            final DataContext dc = new CsvDataContext(url.openStream(), new CsvConfiguration());
+            final Table table = dc.getDefaultSchema().getTable(0);
             final Column projectColumn = table.getColumnByName("Project");
             final Column websiteColumn = table.getColumnByName("Website");
             final Column licenseColumn = table.getColumnByName("License");
@@ -160,7 +160,7 @@ public class AboutDialog extends AbstractDialog {
 
     @Override
     protected int getDialogWidth() {
-        return 650;
+        return WidgetUtils.DIALOG_WIDTH_WIDE;
     }
 
     @Override
@@ -309,16 +309,12 @@ public class AboutDialog extends AbstractDialog {
         buttonPanel.add(Box.createHorizontalStrut(10));
         buttonPanel.add(linkedInButton);
 
-        final NeopostToolbarButton neopostButton =
-                new NeopostToolbarButton(imageManager.getImageIcon("images/powered-by-neopost-bright.png"));
-
         final DCPanel contentPanel = new DCPanel();
         contentPanel.setLayout(new VerticalLayout());
         contentPanel.add(headerLabel);
         contentPanel.add(DCLabel.dark("Core version " + Version.getVersion()));
-        contentPanel.add(DCLabel.dark("Copyright (C) " + Calendar.getInstance().get(Calendar.YEAR) + " Neopost"));
+        contentPanel.add(DCLabel.dark("Copyright (C) " + Calendar.getInstance().get(Calendar.YEAR)));
         contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(DCPanel.around(neopostButton));
 
         if (Version.isCommunityEdition()) {
             contentPanel.add(Box.createVerticalStrut(20));
@@ -353,6 +349,6 @@ public class AboutDialog extends AbstractDialog {
     }
 
     public static void main(final String[] args) {
-        new AboutDialog(new DCWindowContext(null, null, null)).setVisible(true);
+        new AboutDialog(new DCWindowContext(null, null)).setVisible(true);
     }
 }

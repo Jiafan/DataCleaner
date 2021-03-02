@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -36,10 +36,10 @@ import org.datacleaner.connection.CassandraDatastore;
 import org.datacleaner.connection.CompositeDatastore;
 import org.datacleaner.connection.CouchDbDatastore;
 import org.datacleaner.connection.CsvDatastore;
-import org.datacleaner.connection.DataHubDatastore;
 import org.datacleaner.connection.Datastore;
 import org.datacleaner.connection.DatastoreConnection;
 import org.datacleaner.connection.DbaseDatastore;
+import org.datacleaner.connection.DynamoDbDatastore;
 import org.datacleaner.connection.ElasticSearchDatastore;
 import org.datacleaner.connection.ExcelDatastore;
 import org.datacleaner.connection.FileDatastore;
@@ -70,8 +70,8 @@ import org.datacleaner.windows.CassandraDatastoreDialog;
 import org.datacleaner.windows.CompositeDatastoreDialog;
 import org.datacleaner.windows.CouchDbDatastoreDialog;
 import org.datacleaner.windows.CsvDatastoreDialog;
-import org.datacleaner.windows.DataHubDatastoreDialog;
 import org.datacleaner.windows.DbaseDatastoreDialog;
+import org.datacleaner.windows.DynamoDbDatastoreDialog;
 import org.datacleaner.windows.ElasticSearchDatastoreDialog;
 import org.datacleaner.windows.ExcelDatastoreDialog;
 import org.datacleaner.windows.FixedWidthDatastoreDialog;
@@ -118,7 +118,7 @@ public class DatastorePanel extends DCPanel {
 
         setOpaque(false);
 
-        final Icon icon = IconUtils.getDatastoreIcon(datastore);
+        final Icon icon = IconUtils.getDatastoreIcon(datastore, IconUtils.ICON_SIZE_LARGE);
         final String description = getDescription(datastore);
 
         _checkBox = new JCheckBox();
@@ -181,7 +181,7 @@ public class DatastorePanel extends DCPanel {
             return datasourceJndiUrl;
         } else if (datastore instanceof ElasticSearchDatastore) {
             final ElasticSearchDatastore elasticSearchDatastore = (ElasticSearchDatastore) datastore;
-            return elasticSearchDatastore.getClusterName() + " - " + elasticSearchDatastore.getIndexName();
+            return elasticSearchDatastore.getIndexName();
         } else if (datastore instanceof CassandraDatastore) {
             final CassandraDatastore cassandraDatastore = (CassandraDatastore) datastore;
             return cassandraDatastore.getKeyspace();
@@ -237,9 +237,9 @@ public class DatastorePanel extends DCPanel {
         queryButton.addActionListener(e -> {
             final String queryString;
             try (DatastoreConnection connection = datastore.openConnection()) {
-                final Table[] tables = connection.getSchemaNavigator().getDefaultSchema().getTables();
-                if (tables.length > 0) {
-                    queryString = "SELECT *\nFROM " + tables[0].getQualifiedLabel();
+                final List<Table> tables = connection.getSchemaNavigator().getDefaultSchema().getTables();
+                if (tables.size() > 0) {
+                    queryString = "SELECT *\nFROM " + tables.get(0).getQualifiedLabel();
                 } else {
                     queryString = "SELECT *\nFROM ?";
                 }
@@ -337,6 +337,12 @@ public class DatastorePanel extends DCPanel {
                 final CouchDbDatastoreDialog dialog = injector.getInstance(CouchDbDatastoreDialog.class);
                 dialog.open();
             });
+        } else if (datastore instanceof DynamoDbDatastore) {
+            editButton.addActionListener(e -> {
+                final Injector injector = getInjectorBuilder().with(DynamoDbDatastore.class, datastore).createInjector();
+                final DynamoDbDatastoreDialog dialog = injector.getInstance(DynamoDbDatastoreDialog.class);
+                dialog.open();
+            });
         } else if (datastore instanceof MongoDbDatastore) {
             editButton.addActionListener(e -> {
                 final Injector injector = getInjectorBuilder().with(MongoDbDatastore.class, datastore).createInjector();
@@ -355,12 +361,6 @@ public class DatastorePanel extends DCPanel {
                 final Injector injector =
                         getInjectorBuilder().with(SugarCrmDatastore.class, datastore).createInjector();
                 final SugarCrmDatastoreDialog dialog = injector.getInstance(SugarCrmDatastoreDialog.class);
-                dialog.open();
-            });
-        } else if (datastore instanceof DataHubDatastore) {
-            editButton.addActionListener(e -> {
-                final Injector injector = getInjectorBuilder().with(DataHubDatastore.class, datastore).createInjector();
-                final DataHubDatastoreDialog dialog = injector.getInstance(DataHubDatastoreDialog.class);
                 dialog.open();
             });
         } else if (datastore instanceof Neo4jDatastore) {

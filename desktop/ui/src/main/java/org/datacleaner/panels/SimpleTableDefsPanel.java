@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -22,6 +22,7 @@ package org.datacleaner.panels;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -131,7 +132,7 @@ public class SimpleTableDefsPanel extends DCPanel {
                 removeAllTableDefs();
 
                 final Schema schema = _schemaFactory.createSchema();
-                final Table[] tables = schema.getTables();
+                final List<Table> tables = schema.getTables();
                 for (final Table table : tables) {
                     addTableDef(createTableDef(table));
                 }

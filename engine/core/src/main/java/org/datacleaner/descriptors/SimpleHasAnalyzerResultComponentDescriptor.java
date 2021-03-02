@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -37,11 +37,6 @@ public class SimpleHasAnalyzerResultComponentDescriptor<C extends HasAnalyzerRes
 
     public SimpleHasAnalyzerResultComponentDescriptor(final Class<C> beanClass) {
         super(beanClass, false);
-    }
-
-    @Override
-    protected String getDisplayNameIfNotNamed(final Class<?> componentClass) {
-        return componentClass.getSimpleName();
     }
 
     @Override

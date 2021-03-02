@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.eobjects.datacleaner</groupId>
 		<artifactId>DataCleaner</artifactId>
-		<version>5.1.6-SNAPSHOT</version>
+		<version>5.7.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>DataCleaner-components</artifactId>
 	<packaging>pom</packaging>
@@ -18,9 +18,12 @@
 		<module>uniqueness</module>
 		<module>referential-integrity</module>
 		<module>json</module>
+		<module>mark-rows</module>
 		<module>standardizers</module>
 		<module>pattern-finder</module>
+		<module>fill-pattern</module>
 		<module>value-distribution</module>
+		<module>machine-learning</module>
 		<module>date-gap</module>
 		<module>reference-data</module>
 		<module>sample</module>
@@ -30,6 +33,7 @@
 		<module>el</module>
 		<module>http</module>
 		<module>javascript</module>
+		<module>groovy</module>
 		<module>i18n</module>
 		<module>standard-components</module>
 	</modules>

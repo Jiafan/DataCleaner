@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -59,18 +59,20 @@ public class SampleDataContext extends QueryPostprocessDataContext {
     }
 
     @Override
-    protected DataSet materializeMainSchemaTable(final Table table, final Column[] columns, final int maxRows) {
-        final SelectItem[] tableSelectItems = MetaModelHelper.createSelectItems(table.getColumns());
-        final SelectItem[] selectItems = MetaModelHelper.createSelectItems(columns);
+    protected DataSet materializeMainSchemaTable(final Table table, final List<Column> columns, final int maxRows) {
+        final SelectItem[] tableSelectItems = MetaModelHelper.createSelectItems(table.getColumns().toArray(new Column[0]));
+        final SelectItem[] selectItems = MetaModelHelper.createSelectItems(columns.toArray(new Column[0]));
         final SimpleDataSetHeader header = new SimpleDataSetHeader(tableSelectItems);
 
         final List<Row> rows = new ArrayList<>();
+        
+        final SimpleDataSetHeader subSelectionHeader = new SimpleDataSetHeader(selectItems);
 
-        rows.add(new DefaultRow(header, new Object[] { 1, "hello" }).getSubSelection(selectItems));
-        rows.add(new DefaultRow(header, new Object[] { 2, "there" }).getSubSelection(selectItems));
-        rows.add(new DefaultRow(header, new Object[] { 3, "big" }).getSubSelection(selectItems));
-        rows.add(new DefaultRow(header, new Object[] { 4, "wide" }).getSubSelection(selectItems));
-        rows.add(new DefaultRow(header, new Object[] { 5, "world" }).getSubSelection(selectItems));
+        rows.add(new DefaultRow(header, new Object[] { 1, "hello" }).getSubSelection(subSelectionHeader));
+        rows.add(new DefaultRow(header, new Object[] { 2, "there" }).getSubSelection(subSelectionHeader));
+        rows.add(new DefaultRow(header, new Object[] { 3, "big" }).getSubSelection(subSelectionHeader));
+        rows.add(new DefaultRow(header, new Object[] { 4, "wide" }).getSubSelection(subSelectionHeader));
+        rows.add(new DefaultRow(header, new Object[] { 5, "world" }).getSubSelection(subSelectionHeader));
 
         return new InMemoryDataSet(rows);
     }

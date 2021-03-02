@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -22,7 +22,7 @@ package org.datacleaner.spark.functions;
 import org.apache.metamodel.csv.CsvConfiguration;
 import org.apache.spark.api.java.function.Function;
 
-import au.com.bytecode.opencsv.CSVParser;
+import com.opencsv.CSVParser;
 
 public final class CsvParserFunction implements Function<String, Object[]> {
 

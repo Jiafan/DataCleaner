@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -147,6 +147,7 @@ class StreamColumnListPanel extends DCPanel implements ReorderColumnsActionListe
         return getInputColumnCheckBoxes(_availableCheckboxesPanel);
     }
 
+    @SuppressWarnings("unchecked")
     private List<DCCheckBox<InputColumn<?>>> getInputColumnCheckBoxes(final DCPanel panel) {
         final Component[] components = panel.getComponents();
         return CollectionUtils.map(components, component -> (DCCheckBox<InputColumn<?>>) component);

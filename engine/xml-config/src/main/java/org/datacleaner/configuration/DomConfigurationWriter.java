@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -19,8 +19,6 @@
  */
 package org.datacleaner.configuration;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,17 +30,20 @@ import org.apache.metamodel.util.FileResource;
 import org.apache.metamodel.util.HdfsResource;
 import org.apache.metamodel.util.Resource;
 import org.apache.metamodel.util.SimpleTableDef;
+import org.apache.metamodel.util.UrlResource;
 import org.apache.metamodel.xml.XmlDomDataContext;
+import org.datacleaner.connection.ArffDatastore;
 import org.datacleaner.connection.CouchDbDatastore;
 import org.datacleaner.connection.CsvDatastore;
-import org.datacleaner.connection.DataHubDatastore;
 import org.datacleaner.connection.Datastore;
 import org.datacleaner.connection.DatastoreCatalog;
+import org.datacleaner.connection.DynamoDbDatastore;
 import org.datacleaner.connection.ElasticSearchDatastore;
 import org.datacleaner.connection.ExcelDatastore;
 import org.datacleaner.connection.FixedWidthDatastore;
 import org.datacleaner.connection.JdbcDatastore;
 import org.datacleaner.connection.JsonDatastore;
+import org.datacleaner.connection.KafkaDatastore;
 import org.datacleaner.connection.MongoDbDatastore;
 import org.datacleaner.connection.SalesforceDatastore;
 import org.datacleaner.reference.DatastoreDictionary;
@@ -65,7 +66,6 @@ import org.datacleaner.server.EnvironmentBasedHadoopClusterInformation;
 import org.datacleaner.server.HadoopClusterInformation;
 import org.datacleaner.util.HadoopResource;
 import org.datacleaner.util.SecurityUtils;
-import org.datacleaner.util.StringUtils;
 import org.datacleaner.util.xml.XmlUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -76,12 +76,10 @@ import org.w3c.dom.NodeList;
 import com.google.common.base.Strings;
 
 /**
- * Utility class for writing configuration elements to the XML format of
- * conf.xml.
+ * Utility class for writing configuration elements to the XML format of conf.xml.
  *
- * Generally speaking, XML elements created by this class, and placed in a the
- * &lt;datastore-catalog&gt; and &lt;reference-data-catalog&gt; elements of conf.xml, will
- * be readable by {@link JaxbConfigurationReader}.
+ * Generally speaking, XML elements created by this class, and placed in a the &lt;datastore-catalog&gt; and
+ * &lt;reference-data-catalog&gt; elements of conf.xml, will be readable by {@link JaxbConfigurationReader}.
  */
 public class DomConfigurationWriter {
 
@@ -92,8 +90,9 @@ public class DomConfigurationWriter {
     }
 
     public DomConfigurationWriter(final Resource resource) {
-        _document = resource.read(XmlUtils::parseDocument);
-
+        _document = resource.read(is -> {
+            return XmlUtils.parseDocument(is);
+        });
     }
 
     public DomConfigurationWriter(final Document document) {
@@ -135,19 +134,17 @@ public class DomConfigurationWriter {
 
         if (datastore instanceof CsvDatastore) {
             final Resource resource = ((CsvDatastore) datastore).getResource();
-            if (resource instanceof FileResource) {
-                return true;
-            }
-            if (resource instanceof HdfsResource) {
-                return true;
-            }
+            return isExternalizable(resource);
         }
 
         if (datastore instanceof ExcelDatastore) {
             final Resource resource = ((ExcelDatastore) datastore).getResource();
-            if (resource instanceof FileResource) {
-                return true;
-            }
+            return isExternalizable(resource);
+        }
+
+        if (datastore instanceof ArffDatastore) {
+            final Resource resource = ((ArffDatastore) datastore).getResource();
+            return isExternalizable(resource);
         }
 
         if (datastore instanceof ElasticSearchDatastore) {
@@ -174,19 +171,28 @@ public class DomConfigurationWriter {
         if (datastore instanceof SalesforceDatastore) {
             return true;
         }
-
-        if (datastore instanceof DataHubDatastore) {
-            return true;
+        if (datastore instanceof DynamoDbDatastore) {
+            final SimpleTableDef[] tableDefs = ((DynamoDbDatastore) datastore).getTableDefs();
+            if (tableDefs == null) {
+                return true;
+            }
         }
-
         if (datastore instanceof JsonDatastore) {
-            return true;
+            final Resource resource = ((JsonDatastore) datastore).getResource();
+            return isExternalizable(resource);
         }
         if (datastore instanceof FixedWidthDatastore) {
             return true;
         }
-
+        if (datastore instanceof KafkaDatastore) {
+            return true;
+        }
         return false;
+    }
+
+    private boolean isExternalizable(Resource resource) {
+        return resource instanceof FileResource || resource instanceof HadoopResource
+                || resource instanceof HdfsResource || resource instanceof UrlResource;
     }
 
     public boolean isExternalizable(final Dictionary dict) {
@@ -203,8 +209,7 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Removes a Hadoop cluster by its name, if it exists and is recognizeable by the
-     * externalizer.
+     * Removes a Hadoop cluster by its name, if it exists and is recognizeable by the externalizer.
      *
      * @param serverName
      * @return true if a server information element was removed from the XML document.
@@ -217,8 +222,7 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Removes a datastore by its name, if it exists and is recognizeable by the
-     * externalizer.
+     * Removes a datastore by its name, if it exists and is recognizeable by the externalizer.
      *
      * @param datastoreName
      * @return true if a datastore element was removed from the XML document.
@@ -229,8 +233,7 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Removes a dictionary by its name, if it exists and is recognizable by the
-     * externalizer.
+     * Removes a dictionary by its name, if it exists and is recognizable by the externalizer.
      *
      * @param dictionaryName
      * @return true if dictionary element was removed from the XML document
@@ -241,8 +244,7 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Removes a synonym catalog by its name, if it exists and is recognizable
-     * by the externalizer.
+     * Removes a synonym catalog by its name, if it exists and is recognizable by the externalizer.
      *
      * @param synonymCatalogName
      * @return true if dictionary element was removed from the XML document
@@ -253,8 +255,7 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Removes a string pattern by its name, if it exists and is recognizable by
-     * the externalizer.
+     * Removes a string pattern by its name, if it exists and is recognizable by the externalizer.
      *
      * @param stringPatternName
      * @return true if string pattern element was removed from the XML document
@@ -330,6 +331,10 @@ public class DomConfigurationWriter {
             final Resource resource = ((CsvDatastore) datastore).getResource();
             final String filename = toFilename(resource);
             elem = toElement((CsvDatastore) datastore, filename);
+        } else if (datastore instanceof ArffDatastore) {
+            final Resource resource = ((ArffDatastore) datastore).getResource();
+            final String filename = toFilename(resource);
+            elem = toElement((ArffDatastore) datastore, filename);
         } else if (datastore instanceof ExcelDatastore) {
             final Resource resource = ((ExcelDatastore) datastore).getResource();
             final String filename = toFilename(resource);
@@ -342,10 +347,10 @@ public class DomConfigurationWriter {
             elem = toElement((MongoDbDatastore) datastore);
         } else if (datastore instanceof CouchDbDatastore) {
             elem = toElement((CouchDbDatastore) datastore);
+        } else if (datastore instanceof DynamoDbDatastore) {
+            elem = toElement((DynamoDbDatastore) datastore);
         } else if (datastore instanceof SalesforceDatastore) {
             elem = toElement((SalesforceDatastore) datastore);
-        } else if (datastore instanceof DataHubDatastore) {
-            elem = toElement((DataHubDatastore) datastore);
         } else if (datastore instanceof JsonDatastore) {
             final Resource resource = ((JsonDatastore) datastore).getResource();
             final String filename = toFilename(resource);
@@ -354,6 +359,8 @@ public class DomConfigurationWriter {
             final Resource resource = ((FixedWidthDatastore) datastore).getResource();
             final String filename = toFilename(resource);
             elem = toElement((FixedWidthDatastore) datastore, filename);
+        } else if (datastore instanceof KafkaDatastore) {
+            elem = toElement((KafkaDatastore) datastore);
         } else {
             throw new UnsupportedOperationException("Non-supported datastore: " + datastore);
         }
@@ -483,7 +490,7 @@ public class DomConfigurationWriter {
 
         final String csvList = builder.toString();
 
-        return csvList.substring(0, csvList.length() - 1); // remove last comma 
+        return csvList.substring(0, csvList.length() - 1); // remove last comma
     }
 
     private Element toElement(final SimpleStringPattern sp) {
@@ -604,8 +611,7 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Creates a filename string to externalize, based on a given
-     * {@link Resource}.
+     * Creates a filename string to externalize, based on a given {@link Resource}.
      *
      * @param resource
      * @return
@@ -621,7 +627,9 @@ public class DomConfigurationWriter {
         if (resource instanceof HdfsResource) {
             return resource.getQualifiedPath();
         }
-
+        if (resource instanceof UrlResource) {
+            return resource.getQualifiedPath();
+        }
         throw new UnsupportedOperationException("Unsupported resource type: " + resource);
     }
 
@@ -722,6 +730,7 @@ public class DomConfigurationWriter {
      * @param datastore
      * @return
      */
+    @SuppressWarnings("deprecation")
     public Element toElement(final ElasticSearchDatastore datastore) {
         final Element ds = getDocument().createElement("elasticsearch-datastore");
         ds.setAttribute("name", datastore.getName());
@@ -769,6 +778,25 @@ public class DomConfigurationWriter {
     }
 
     /**
+     * Externalizes a {@link DynamoDbDatastore} to a XML element
+     * 
+     * @param datastore
+     * @return
+     */
+    public Element toElement(final DynamoDbDatastore datastore) {
+        final Element ds = getDocument().createElement("dynamodb-datastore");
+        ds.setAttribute("name", datastore.getName());
+        if (!Strings.isNullOrEmpty(datastore.getDescription())) {
+            ds.setAttribute("description", datastore.getDescription());
+        }
+
+        appendElement(ds, "region", datastore.getRegion());
+        appendElement(ds, "accessKeyId", datastore.getAccessKeyId());
+        appendElement(ds, "secretAccessKey", encodePassword(datastore.getSecretAccessKey()));
+        return ds;
+    }
+
+    /**
      * Externalizes a {@link CouchDbDatastore} to a XML element
      *
      * @param datastore
@@ -790,6 +818,20 @@ public class DomConfigurationWriter {
         return ds;
     }
 
+    public Element toElement(KafkaDatastore datastore) {
+        final Element ds = getDocument().createElement("kafka-datastore");
+        ds.setAttribute("name", datastore.getName());
+        if (!Strings.isNullOrEmpty(datastore.getDescription())) {
+            ds.setAttribute("description", datastore.getDescription());
+        }
+        appendElement(ds, "bootstrap-servers", datastore.getBootstrapServers());
+        for (String topic : datastore.getTopics()) {
+            appendElement(ds, "topic", topic);
+        }
+        appendElement(ds, "key-type", datastore.getKeyType().name());
+        appendElement(ds, "value-type", datastore.getValueType().name());
+        return ds;
+    }
 
     public Element toElement(final FixedWidthDatastore datastore, final String filename) {
         final Element ds = getDocument().createElement("fixed-width-datastore");
@@ -812,6 +854,16 @@ public class DomConfigurationWriter {
             }
         }
         ds.appendChild(widthElement);
+
+        final List<String> customColumnNames = datastore.getCustomColumnNames();
+        if (customColumnNames != null && !customColumnNames.isEmpty()) {
+            final Element columnNamesElement = getDocument().createElement("custom-column-names");
+            for (String columnName : customColumnNames) {
+                appendElement(widthElement, "column-name", columnName);
+            }
+            ds.appendChild(columnNamesElement);
+        }
+
         appendElement(ds, "header-line-number", datastore.getHeaderLineNumber());
         appendElement(ds, "fail-on-inconsistencies", String.valueOf(datastore.isFailOnInconsistencies()));
         appendElement(ds, "skip-ebcdic-header", String.valueOf(datastore.isSkipEbcdicHeader()));
@@ -846,38 +898,12 @@ public class DomConfigurationWriter {
     }
 
     /**
-     * Externalizes a {@link DataHubDatastore} to an XML element
-     *
-     * @param datastore
-     * @return
-     */
-    private Element toElement(final DataHubDatastore datastore) {
-        final Element ds = getDocument().createElement("datahub-datastore");
-        ds.setAttribute("name", datastore.getName());
-        if (!isNullOrEmpty(datastore.getDescription())) {
-            ds.setAttribute("description", datastore.getDescription());
-        }
-
-        appendElement(ds, "host", datastore.getHost());
-        appendElement(ds, "port", datastore.getPort());
-        appendElement(ds, "username", datastore.getUsername());
-        appendElement(ds, "password", encodePassword(datastore.getPassword()));
-        appendElement(ds, "https", datastore.isHttps());
-        appendElement(ds, "acceptunverifiedsslpeers", datastore.isAcceptUnverifiedSslPeers());
-        appendElement(ds, "datahubsecuritymode", datastore.getSecurityMode());
-
-        return ds;
-    }
-
-    /**
      * Externalizes a {@link ExcelDatastore} to a XML element.
      *
      * @param datastore
-     * @param filename
-     *            the filename/path to use in the XML element. Since the
-     *            appropriate path will depend on the reading application's
-     *            environment (supported {@link Resource} types), this specific
-     *            property of the datastore is provided separately.
+     * @param filename the filename/path to use in the XML element. Since the appropriate path will depend on the
+     *            reading application's environment (supported {@link Resource} types), this specific property of the
+     *            datastore is provided separately.
      * @return
      */
     public Element toElement(final ExcelDatastore datastore, final String filename) {
@@ -904,13 +930,10 @@ public class DomConfigurationWriter {
     /**
      * Externalizes a {@link CsvDatastore} to a XML element.
      *
-     * @param datastore
-     *            the datastore to externalize
-     * @param filename
-     *            the filename/path to use in the XML element. Since the
-     *            appropriate path will depend on the reading application's
-     *            environment (supported {@link Resource} types), this specific
-     *            property of the datastore is provided separately.
+     * @param datastore the datastore to externalize
+     * @param filename the filename/path to use in the XML element. Since the appropriate path will depend on the
+     *            reading application's environment (supported {@link Resource} types), this specific property of the
+     *            datastore is provided separately.
      * @return a XML element representing the datastore.
      */
     public Element toElement(final CsvDatastore datastore, final String filename) {
@@ -942,8 +965,21 @@ public class DomConfigurationWriter {
         return datastoreElement;
     }
 
+    private Element toElement(ArffDatastore datastore, String filename) {
+        final Element datastoreElement = getDocument().createElement("arff-datastore");
+        datastoreElement.setAttribute("name", datastore.getName());
+        final String description = datastore.getDescription();
+        if (!Strings.isNullOrEmpty(description)) {
+            datastoreElement.setAttribute("description", description);
+        }
+        appendElement(datastoreElement, "filename", filename);
+
+        return datastoreElement;
+    }
+
     /**
      * Extrnalizes a Json datastore
+     * 
      * @param datastore
      * @param filename
      * @return
@@ -1001,7 +1037,6 @@ public class DomConfigurationWriter {
 
         return getOrCreateChildElementByTagName(hadoopClustersElement, "hadoop-clusters");
     }
-
 
     /**
      * Gets the XML element that represents the dictionaries
@@ -1124,47 +1159,5 @@ public class DomConfigurationWriter {
         final Element element = getDocument().createElement(elementName);
         element.setTextContent(stringValue);
         parent.appendChild(element);
-    }
-
-
-    public void addRemoteServer(final String serverName, final String url, final String username,
-            final String password) {
-        final Element descriptorProviderElement =
-                getOrCreateChildElementByTagName(getDocumentElement(), "descriptor-providers");
-        final Element remoteComponentsElement =
-                getOrCreateChildElementByTagName(descriptorProviderElement, "remote-components");
-
-        final Element serverElement = getDocument().createElement("server");
-        remoteComponentsElement.appendChild(serverElement);
-
-        if (!StringUtils.isNullOrEmpty(serverName)) {
-            appendElement(serverElement, "name", serverName);
-        }
-
-        if (!StringUtils.isNullOrEmpty(url)) {
-            appendElement(serverElement, "url", url);
-        }
-        appendElement(serverElement, "username", username);
-        appendElement(serverElement, "password", SecurityUtils.encodePasswordWithPrefix(password));
-        onDocumentChanged(getDocument());
-    }
-
-    public void updateRemoteServerCredentials(final String serverName, final String username, final String password) {
-        final Element remoteComponents = getChildElementByTagName(getDocumentElement(), "remote-components");
-        final NodeList servers = remoteComponents.getElementsByTagName("server");
-        for (int i = 0; i < servers.getLength(); i++) {
-            if (servers.item(i) instanceof Element) {
-                final Element server = (Element) servers.item(i);
-                final Element name = getChildElementByTagName(server, "name");
-                if (name != null && serverName.equals(name.getTextContent())) {
-                    final Element usernameElemet = getOrCreateChildElementByTagName(server, "username");
-                    usernameElemet.setTextContent(username);
-                    final Element passwordElement = getOrCreateChildElementByTagName(server, "password");
-                    passwordElement.setTextContent(SecurityUtils.encodePasswordWithPrefix(password));
-                    break;
-                }
-            }
-        }
-        onDocumentChanged(getDocument());
     }
 }

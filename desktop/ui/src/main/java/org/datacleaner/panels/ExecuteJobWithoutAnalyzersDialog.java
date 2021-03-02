@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -86,7 +86,7 @@ public class ExecuteJobWithoutAnalyzersDialog extends AbstractDialog {
 
     @Override
     protected int getDialogWidth() {
-        return 400;
+        return WidgetUtils.DIALOG_WIDTH_NARROW;
     }
 
     @Override
@@ -190,7 +190,7 @@ public class ExecuteJobWithoutAnalyzersDialog extends AbstractDialog {
         LookAndFeelManager.get().init();
 
         final DCWindowContext windowContext =
-                new DCWindowContext(new DataCleanerConfigurationImpl(), new UserPreferencesImpl(null), null);
+                new DCWindowContext(new DataCleanerConfigurationImpl(), new UserPreferencesImpl(null));
 
         final UserPreferences userPreferences = new UserPreferencesImpl(null);
         final ExecuteJobWithoutAnalyzersDialog dialog =

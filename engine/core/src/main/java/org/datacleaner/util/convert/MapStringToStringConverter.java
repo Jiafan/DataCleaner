@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -31,9 +31,8 @@ import org.datacleaner.api.Converter;
 import org.datacleaner.util.LabelUtils;
 import org.datacleaner.util.ReflectionUtils;
 
-import au.com.bytecode.opencsv.CSVParser;
-
 import com.google.common.base.Splitter;
+import com.opencsv.CSVParser;
 
 /**
  * A {@link Converter} for maps.

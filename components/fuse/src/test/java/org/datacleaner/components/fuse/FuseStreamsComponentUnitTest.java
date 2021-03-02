@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -60,7 +60,7 @@ public class FuseStreamsComponentUnitTest extends TestCase {
         assertEquals(1, streams.length);
 
         final OutputDataStream stream = streams[0];
-        assertEquals("[name1, city1]", Arrays.toString(stream.getTable().getColumnNames()));
+        assertEquals("[name1, city1]", stream.getTable().getColumnNames().toString());
 
         final MockOutputRowCollector outputRowCollector = new MockOutputRowCollector();
         component.initializeOutputDataStream(stream, null, outputRowCollector);

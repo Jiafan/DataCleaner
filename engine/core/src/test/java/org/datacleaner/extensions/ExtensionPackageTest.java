@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -41,7 +41,7 @@ public class ExtensionPackageTest extends TestCase {
 
         assertTrue(extensionPackage.isLoaded());
         assertEquals(0, extensionPackage.getLoadedAnalyzers());
-        assertEquals(23, extensionPackage.getLoadedTransformers());
+        assertEquals(11, extensionPackage.getLoadedTransformers());
         assertEquals(0, extensionPackage.getLoadedFilters());
     }
 }

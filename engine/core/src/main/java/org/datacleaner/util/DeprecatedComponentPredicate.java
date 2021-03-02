@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -19,7 +19,8 @@
  */
 package org.datacleaner.util;
 
-import org.apache.metamodel.util.Predicate;
+import java.util.function.Predicate;
+
 import org.datacleaner.descriptors.ComponentDescriptor;
 
 /**
@@ -29,7 +30,7 @@ import org.datacleaner.descriptors.ComponentDescriptor;
 public class DeprecatedComponentPredicate implements Predicate<ComponentDescriptor<?>> {
 
     @Override
-    public Boolean eval(final ComponentDescriptor<?> descriptor) {
+    public boolean test(final ComponentDescriptor<?> descriptor) {
         final Class<?> componentClass = descriptor.getComponentClass();
         final boolean isDeprecated = ReflectionUtils.isAnnotationPresent(componentClass, Deprecated.class);
         return !isDeprecated;

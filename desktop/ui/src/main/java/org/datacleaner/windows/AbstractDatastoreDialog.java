@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -61,7 +61,7 @@ import org.jdesktop.swingx.JXTextField;
 public abstract class AbstractDatastoreDialog<D extends Datastore> extends AbstractDialog {
 
     protected static final ImageManager imageManager = ImageManager.get();
-    static final String DEFAULT_BANNER_IMAGE = "images/window/banner-datastores.png";
+    protected static final String DEFAULT_BANNER_IMAGE = "images/window/banner-datastores.png";
     private static final long serialVersionUID = 1L;
     protected final JLabel _statusLabel;
     protected final DCPanel _outerPanel = new DCPanel();
@@ -100,7 +100,7 @@ public abstract class AbstractDatastoreDialog<D extends Datastore> extends Abstr
         _cancelButton.addActionListener(e -> AbstractDatastoreDialog.this.close());
 
         if (!DEFAULT_BANNER_IMAGE.equals(getDatastoreIconPath())) {
-            final Image image = imageManager.getImage(getDatastoreIconPath());
+            final Image image = imageManager.getImage(getDatastoreIconPath(), IconUtils.ICON_SIZE_LARGE);
             setBannerImage(image);
         }
 
@@ -199,17 +199,12 @@ public abstract class AbstractDatastoreDialog<D extends Datastore> extends Abstr
         return imageManager.getImage(getDatastoreIconPath());
     }
 
-    @Override
-    protected int getDialogWidth() {
-        return 600;
-    }
-
     public UserPreferences getUserPreferences() {
         return _userPreferences;
     }
 
     @Override
-    protected boolean isWindowResizable() {
+    protected final boolean isWindowResizable() {
         return true;
     }
 

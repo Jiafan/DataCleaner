@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -154,11 +154,6 @@ public final class DatastoreDictionaryDialog extends AbstractDialog {
     @Override
     protected String getBannerTitle() {
         return "Datastore dictionary";
-    }
-
-    @Override
-    protected int getDialogWidth() {
-        return 600;
     }
 
     @Override

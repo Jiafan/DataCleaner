@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -20,6 +20,7 @@
 package org.datacleaner.job.runner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -263,7 +264,7 @@ public final class RowProcessingPublishers {
             final Column[] physicalColumns = getPhysicalColumns(sourceColumnFinder, componentJob);
             final Column[] relevantColumns = MetaModelHelper.getTableColumns(dataStream.getTable(), physicalColumns);
 
-            sourceTableRowPublisher.addPhysicalColumns(relevantColumns);
+            sourceTableRowPublisher.addPhysicalColumns(Arrays.asList(relevantColumns));
         }
 
         // find which input columns (both physical or virtual) are needed by

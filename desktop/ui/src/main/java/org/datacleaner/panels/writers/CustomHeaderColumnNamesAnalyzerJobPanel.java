@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -28,13 +28,10 @@ import org.datacleaner.panels.AnalyzerComponentBuilderPanel;
 import org.datacleaner.widgets.properties.MultipleMappedStringsPropertyWidget;
 import org.datacleaner.widgets.properties.PropertyWidget;
 import org.datacleaner.widgets.properties.PropertyWidgetFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CustomHeaderColumnNamesAnalyzerJobPanel extends AnalyzerComponentBuilderPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = LoggerFactory.getLogger(CustomHeaderColumnNamesAnalyzerJobPanel.class);
 
     private final MultipleMappedStringsPropertyWidget _mappedWidget;
     private final ConfiguredPropertyDescriptor _inputColumnsProperty;

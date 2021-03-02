@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -52,17 +52,6 @@ public final class ResourceManager {
      */
     public static ResourceManager get() {
         return instance;
-    }
-
-    /**
-     * Gets the singleton instance of {@link ResourceManager}.
-     *
-     * @return
-     * @deprecated use {@link #get()} instead
-     */
-    @Deprecated
-    public static ResourceManager getInstance() {
-        return get();
     }
 
     public List<URL> getUrls(final String path, ClassLoader... classLoaders) {

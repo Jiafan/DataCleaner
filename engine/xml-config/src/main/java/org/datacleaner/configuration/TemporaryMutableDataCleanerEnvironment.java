@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -34,23 +34,12 @@ final class TemporaryMutableDataCleanerEnvironment implements DataCleanerEnviron
     private StorageProvider _storageProvider;
     private DescriptorProvider _descriptorProvider;
     private TaskRunner _taskRunner;
-    private RemoteServerConfiguration _remoteServerConfiguration;
 
     public TemporaryMutableDataCleanerEnvironment(final DataCleanerEnvironment baseEnvironment) {
         _injectionManagerFactory = baseEnvironment.getInjectionManagerFactory();
         _storageProvider = baseEnvironment.getStorageProvider();
         _descriptorProvider = baseEnvironment.getDescriptorProvider();
         _taskRunner = baseEnvironment.getTaskRunner();
-        _remoteServerConfiguration = baseEnvironment.getRemoteServerConfiguration();
-    }
-
-    @Override
-    public RemoteServerConfiguration getRemoteServerConfiguration() {
-        return _remoteServerConfiguration;
-    }
-
-    public void setRemoteServerConfiguration(final RemoteServerConfiguration remoteServerConfiguration) {
-        this._remoteServerConfiguration = remoteServerConfiguration;
     }
 
     @Override

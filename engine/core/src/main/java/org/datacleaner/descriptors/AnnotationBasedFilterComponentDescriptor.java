@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -43,17 +43,6 @@ final class AnnotationBasedFilterComponentDescriptor<F extends Filter<C>, C exte
         }
 
         visitClass();
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    protected String getDisplayNameIfNotNamed(final Class<?> cls) {
-        final org.eobjects.analyzer.beans.api.FilterBean annotation =
-                ReflectionUtils.getAnnotation(cls, org.eobjects.analyzer.beans.api.FilterBean.class);
-        if (annotation == null) {
-            return null;
-        }
-        return annotation.value();
     }
 
     @Override

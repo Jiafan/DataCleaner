@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -37,21 +37,21 @@ import org.datacleaner.api.ComponentCategory;
 import org.datacleaner.api.ComponentSuperCategory;
 import org.datacleaner.api.InputColumn;
 import org.datacleaner.components.categories.WriteDataCategory;
-import org.datacleaner.configuration.RemoteServerState;
 import org.datacleaner.connection.AccessDatastore;
 import org.datacleaner.connection.CassandraDatastore;
 import org.datacleaner.connection.CompositeDatastore;
 import org.datacleaner.connection.CouchDbDatastore;
 import org.datacleaner.connection.CsvDatastore;
-import org.datacleaner.connection.DataHubDatastore;
 import org.datacleaner.connection.Datastore;
 import org.datacleaner.connection.DbaseDatastore;
+import org.datacleaner.connection.DynamoDbDatastore;
 import org.datacleaner.connection.ElasticSearchDatastore;
 import org.datacleaner.connection.ExcelDatastore;
 import org.datacleaner.connection.FixedWidthDatastore;
 import org.datacleaner.connection.HBaseDatastore;
 import org.datacleaner.connection.JdbcDatastore;
 import org.datacleaner.connection.JsonDatastore;
+import org.datacleaner.connection.KafkaDatastore;
 import org.datacleaner.connection.MongoDbDatastore;
 import org.datacleaner.connection.Neo4jDatastore;
 import org.datacleaner.connection.OdbDatastore;
@@ -61,17 +61,14 @@ import org.datacleaner.connection.SugarCrmDatastore;
 import org.datacleaner.connection.XmlDatastore;
 import org.datacleaner.database.DatabaseDriverCatalog;
 import org.datacleaner.database.DatabaseDriverDescriptor;
-import org.datacleaner.descriptors.Allowable;
 import org.datacleaner.descriptors.AnalyzerDescriptor;
 import org.datacleaner.descriptors.ComponentDescriptor;
 import org.datacleaner.descriptors.FilterDescriptor;
 import org.datacleaner.descriptors.HasIcon;
-import org.datacleaner.descriptors.RemoteTransformerDescriptor;
 import org.datacleaner.descriptors.TransformerDescriptor;
 
 /**
- * Contains utility methods concerned with icons, primarily datastore and
- * component icons.
+ * Contains utility methods concerned with icons, primarily datastore and component icons.
  */
 public final class IconUtils {
 
@@ -101,9 +98,10 @@ public final class IconUtils {
         }
     }
 
-    public static final int ICON_SIZE_LARGE = 32;
-    public static final int ICON_SIZE_MEDIUM = 22;
-    public static final int ICON_SIZE_SMALL = 16;
+    private static final WidgetScreenResolutionAdjuster adjuster = WidgetScreenResolutionAdjuster.get();
+    public static final int ICON_SIZE_LARGE = adjuster.adjust(32);
+    public static final int ICON_SIZE_MEDIUM = adjuster.adjust(22);
+    public static final int ICON_SIZE_SMALL = adjuster.adjust(16);
     public static final int ICON_SIZE_MENU_ITEM = ICON_SIZE_SMALL;
     public static final int ICON_SIZE_BUTTON = ICON_SIZE_MEDIUM;
     public static final int ICON_SIZE_TAB = ICON_SIZE_MEDIUM;
@@ -132,16 +130,13 @@ public final class IconUtils {
     public static final String MENU_EXECUTE = "images/menu/execute.png";
     public static final String MENU_REFRESH = "images/menu/refresh.png";
     public static final String MENU_OPTIONS = "images/menu/options.png";
-    public static final String MENU_DQ_MONITOR = "images/menu/dq_monitor.png";
-    public static final String MENU_DATACLOUD = "images/menu/datacloud.png";
     public static final String MENU_DOCUMENTATION = "images/menu/documentation.png";
     public static final String ACTION_EXECUTE = "images/menu/execute.png";
     public static final String ACTION_EDIT = "images/actions/edit.png";
     public static final String ACTION_SAVE_BRIGHT = "images/actions/save_bright.png";
     public static final String ACTION_SAVE_DARK = "images/actions/save_dark.png";
     /**
-     * @deprecated use {@link #ACTION_SAVE_BRIGHT} or {@link #ACTION_SAVE_DARK}
-     *             instead
+     * @deprecated use {@link #ACTION_SAVE_BRIGHT} or {@link #ACTION_SAVE_DARK} instead
      */
     @Deprecated
     public static final String ACTION_SAVE = ACTION_SAVE_DARK;
@@ -191,10 +186,6 @@ public final class IconUtils {
     public static final String CHART_BAR = "images/chart-types/bar.png";
     public static final String CHART_LINE = "images/chart-types/line.png";
     public static final String CHART_SCATTER = "images/chart-types/scatter.png";
-    public static final String CLOUD_GREY = "images/datacloud/cloudGrey.png";
-    public static final String CLOUD_ORANGE = "images/datacloud/cloudOrange.png";
-    public static final String CLOUD_GREEN = "images/datacloud/cloudGreen.png";
-    public static final String CLOUD_RED = "images/datacloud/cloudRed.png";
     public static final String DICTIONARY_IMAGEPATH = "images/model/dictionary.png";
     public static final String DICTIONARY_SIMPLE_IMAGEPATH = "images/model/dictionary_simple.png";
     public static final String DICTIONARY_TEXTFILE_IMAGEPATH = "images/model/dictionary_textfile.png";
@@ -222,13 +213,14 @@ public final class IconUtils {
     public static final String COMPOSITE_IMAGEPATH = "images/datastore-types/composite.png";
     public static final String MONGODB_IMAGEPATH = "images/datastore-types/mongodb.png";
     public static final String COUCHDB_IMAGEPATH = "images/datastore-types/couchdb.png";
+    public static final String DYNAMODB_IMAGEPATH = "images/datastore-types/dynamodb.png";
+    public static final String KAFKA_IMAGEPATH = "images/datastore-types/kafka.png";
     public static final String SALESFORCE_IMAGEPATH = "images/datastore-types/salesforce.png";
     public static final String SUGAR_CRM_IMAGEPATH = "images/datastore-types/sugarcrm.png";
     public static final String JSON_IMAGEPATH = "images/datastore-types/json.png";
     public static final String HBASE_IMAGEPATH = "images/datastore-types/hbase.png";
     public static final String CASSANDRA_IMAGEPATH = "images/datastore-types/cassandra.png";
     public static final String ELASTICSEARCH_IMAGEPATH = "images/datastore-types/elasticsearch.png";
-    public static final String DATAHUB_IMAGEPATH = "images/datastore-types/datahub.png";
     public static final String NEO4J_IMAGEPATH = "images/datastore-types/neo4j.png";
     public static final String FILE_FOLDER = "images/filetypes/folder.png";
     public static final String FILE_ARCHIVE = "images/filetypes/archive.png";
@@ -238,8 +230,6 @@ public final class IconUtils {
     public static final String FILE_HOME_FOLDER = "images/filetypes/home-folder.png";
     public static final String FILE_HIDDEN_FOLDER = "images/filetypes/hidden-folder.png";
     public static final String FILE_SEARCH = "images/filetypes/search-folder.png";
-    public static final String REMOTE_ICON_OVERLAY = "images/remote-icon-overlay.png";
-    public static final String REMOTE_ICON_OVERLAY_SMALL = "images/remote-icon-overlay-small.png";
     public static final String PASSWORD_INPUT = "images/widgets/PasswordInput.png";
     public static final String USERNAME_INPUT = "images/widgets/UsernameInput.png";
     public static final String COMPONENT_TYPE_WRITE_DATA = "images/component-types/type_output_writer.png";
@@ -254,34 +244,25 @@ public final class IconUtils {
 
     public static Icon getDescriptorIcon(final ComponentDescriptor<?> descriptor, final boolean configured,
             final int iconWidth) {
-        boolean serverDown = false;
-
-        if (descriptor instanceof RemoteTransformerDescriptor) {
-            if (((RemoteTransformerDescriptor<?>) descriptor).getRemoteDescriptorProvider().getServerState()
-                    .getActualState().equals(RemoteServerState.State.ERROR)) {
-                serverDown = true;
-            }
-        }
-
         if (descriptor instanceof HasIcon) {
             final ImageIcon imageIcon = getIconFromData(descriptor, iconWidth);
 
             if (imageIcon != null) {
-                return serverDown ? addErrorOverlay(imageIcon) : imageIcon;
+                return imageIcon;
             }
         }
 
         final ImageIcon descriptorIcon = getDescriptorIcon(descriptor, iconWidth);
 
         if (configured) {
-            return serverDown ? addErrorOverlay(descriptorIcon) : descriptorIcon;
+            return descriptorIcon;
         }
 
         return addErrorOverlay(descriptorIcon);
     }
 
     public static ImageIcon addErrorOverlay(final ImageIcon imageIcon) {
-        final int offset = 4;
+        final int offset = adjuster.adjust(4);
         final int iconWidth = imageIcon.getIconWidth();
         final int decorationSize = iconWidth / 2;
         final Image errorImage = _imageManager.getImage(STATUS_ERROR, decorationSize);
@@ -309,10 +290,8 @@ public final class IconUtils {
      *
      * @param descriptor
      * @param newWidth
-     * @param allowTransparentForUnspecific
-     *            whether or not to use a transparent icon in case only a
-     *            generic icon could be found. This is useful for menu items
-     *            where the icon is not a requirement.
+     * @param allowTransparentForUnspecific whether or not to use a transparent icon in case only a generic icon could
+     *            be found. This is useful for menu items where the icon is not a requirement.
      * @return
      */
     public static ImageIcon getDescriptorIcon(final ComponentDescriptor<?> descriptor, final int newWidth,
@@ -355,10 +334,6 @@ public final class IconUtils {
             final BufferedImage bufferedImage = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
             bufferedImage.getGraphics().drawImage(imageIcon.getImage(), 0, 0, width, width, null);
             imageIcon = new ImageIcon(bufferedImage);
-            if (componentDescriptor instanceof Allowable && !((Allowable) componentDescriptor).isAllowed()) {
-                imageIcon = getDisabledIcon(imageIcon);
-            }
-            imageIcon = addRemoteOverlay(imageIcon);
             _imageManager.storeImageIntoCache(cacheKey, imageIcon.getImage());
         } else {
             imageIcon = new ImageIcon(image);
@@ -367,36 +342,17 @@ public final class IconUtils {
         return imageIcon;
     }
 
-    public static ImageIcon addRemoteOverlay(final ImageIcon imageIcon) {
-        final BufferedImage bufferedImage;
-        final int offset;
-        final Image remoteIndicatorImage;
-        final int iconWidth = imageIcon.getIconWidth();
-        if (iconWidth >= ICON_SIZE_LARGE) {
-            offset = 8;
-            remoteIndicatorImage = _imageManager.getImage(REMOTE_ICON_OVERLAY);
-        } else {
-            offset = 4;
-            remoteIndicatorImage = _imageManager.getImage(REMOTE_ICON_OVERLAY_SMALL);
-        }
-        bufferedImage = new BufferedImage(iconWidth + offset, iconWidth + offset, BufferedImage.TYPE_INT_ARGB);
-        bufferedImage.getGraphics().drawImage(imageIcon.getImage(), 0, offset, null);
-        bufferedImage.getGraphics()
-                .drawImage(remoteIndicatorImage, iconWidth - remoteIndicatorImage.getWidth(null) + offset, 0, null);
-        return new ImageIcon(bufferedImage);
-    }
-
     public static ImageIcon getTransparentIcon(final int width) {
-        switch (width) {
-        case ICON_SIZE_SMALL:
+        if (width == ICON_SIZE_SMALL) {
             return ICON_TRANSPARENT_SMALL;
-        case ICON_SIZE_MEDIUM:
-            return ICON_TRANSPARENT_MEDIUM;
-        case ICON_SIZE_LARGE:
-            return ICON_TRANSPARENT_LARGE;
-        default:
-            return createTransparentIcon(width);
         }
+        if (width == ICON_SIZE_MEDIUM) {
+            return ICON_TRANSPARENT_MEDIUM;
+        }
+        if (width == ICON_SIZE_LARGE) {
+            return ICON_TRANSPARENT_LARGE;
+        }
+        return createTransparentIcon(width);
     }
 
     private static ImageIcon createTransparentIcon(final int width) {
@@ -482,8 +438,8 @@ public final class IconUtils {
 
         final BufferedImage bufferedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
         bufferedImage.getGraphics().drawImage(jobIcon, 0, 0, null);
-        bufferedImage.getGraphics()
-                .drawImage(datastoreIcon, totalWidth - decorationSize, totalHeight - decorationSize, null);
+        bufferedImage.getGraphics().drawImage(datastoreIcon, totalWidth - decorationSize, totalHeight - decorationSize,
+                null);
         return new ImageIcon(bufferedImage);
     }
 
@@ -532,9 +488,8 @@ public final class IconUtils {
             return ANALYZER_IMAGEPATH;
         }
         /*
-         * DC monitor can run Custom jobs and therefore do not have a
-         * descriptor. We want to be able to render the results, therefore we
-         * return a image
+         * DC monitor can run Custom jobs and therefore do not have a descriptor. We want to be able to render the
+         * results, therefore we return a image
          */
         return FILE_FILE;
     }
@@ -560,8 +515,8 @@ public final class IconUtils {
             return imagePath;
         } else if (datastore instanceof JdbcDatastore) {
             final JdbcDatastore jdbcDatastore = (JdbcDatastore) datastore;
-            if (considerOrderdbSpecialization && "jdbc:hsqldb:res:orderdb;readonly=true"
-                    .equals(jdbcDatastore.getJdbcUrl())) {
+            if (considerOrderdbSpecialization
+                    && "jdbc:hsqldb:res:orderdb;readonly=true".equals(jdbcDatastore.getJdbcUrl())) {
                 imagePath = "images/datastore-types/orderdb.png";
             } else {
                 final String driverClass = jdbcDatastore.getDriverClass();
@@ -599,6 +554,10 @@ public final class IconUtils {
             imagePath = JSON_IMAGEPATH;
         } else if (datastore instanceof CouchDbDatastore) {
             imagePath = COUCHDB_IMAGEPATH;
+        } else if (datastore instanceof DynamoDbDatastore) {
+            imagePath = DYNAMODB_IMAGEPATH;
+        } else if (datastore instanceof KafkaDatastore) {
+            imagePath = KAFKA_IMAGEPATH;
         } else if (datastore instanceof MongoDbDatastore) {
             imagePath = MONGODB_IMAGEPATH;
         } else if (datastore instanceof SalesforceDatastore) {
@@ -607,8 +566,6 @@ public final class IconUtils {
             imagePath = SUGAR_CRM_IMAGEPATH;
         } else if (datastore instanceof CompositeDatastore) {
             imagePath = COMPOSITE_IMAGEPATH;
-        } else if (datastore instanceof DataHubDatastore) {
-            imagePath = DATAHUB_IMAGEPATH;
         } else if (datastore instanceof Neo4jDatastore) {
             imagePath = NEO4J_IMAGEPATH;
         }

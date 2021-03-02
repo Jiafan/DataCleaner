@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -150,7 +150,8 @@ public class HttpRequestTransformer implements Transformer {
         if (headers != null) {
             final Set<Entry<String, String>> entries = headers.entrySet();
             for (final Entry<String, String> entry : entries) {
-                request.setHeader(entry.getKey(), entry.getValue());
+                final String finalValue = applyVariablesToString(entry.getValue(), inputRow).trim();
+                request.setHeader(entry.getKey(), finalValue);
             }
         }
 

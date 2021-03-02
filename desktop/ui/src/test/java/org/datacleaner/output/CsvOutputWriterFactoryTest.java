@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -22,7 +22,7 @@ package org.datacleaner.output;
 import java.io.File;
 
 import org.apache.metamodel.DataContext;
-import org.apache.metamodel.DataContextFactory;
+import org.apache.metamodel.csv.CsvDataContext;
 import org.apache.metamodel.data.DataSet;
 import org.apache.metamodel.query.Query;
 import org.apache.metamodel.schema.Table;
@@ -41,8 +41,8 @@ public class CsvOutputWriterFactoryTest extends TestCase {
         scenarioHelper.writeExampleData(writer);
         writer.close();
 
-        final DataContext dc = DataContextFactory.createCsvDataContext(new File(filename));
-        final Table table = dc.getDefaultSchema().getTables()[0];
+        final DataContext dc = new CsvDataContext(new File(filename));
+        final Table table = dc.getDefaultSchema().getTable(0);
         final Query q = dc.query().from(table).select(table.getColumns()).toQuery();
         final DataSet dataSet = dc.executeQuery(q);
 

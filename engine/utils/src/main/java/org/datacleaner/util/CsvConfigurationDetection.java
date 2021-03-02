@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -113,9 +113,8 @@ public class CsvConfigurationDetection {
      * providing the encoding externally.
      *
      * @param encoding
-     * @return
-     * @throws IllegalStateException
-     *             if an error occurs during auto-detection
+     * @return a detected CSV configuration
+     * @throws IllegalStateException if an error occurs during auto-detection
      */
     public CsvConfiguration suggestCsvConfiguration(final String encoding, final List<String> columnNames)
             throws IllegalStateException {
@@ -126,9 +125,8 @@ public class CsvConfigurationDetection {
     /**
      * Auto-detects the {@link CsvConfiguration} of a CSV style data file.
      *
-     * @return
-     * @throws IllegalStateException
-     *             if an error occurs during auto-detection
+     * @return a detected CSV configuration
+     * @throws IllegalStateException if an error occurs during auto-detection
      */
     public CsvConfiguration suggestCsvConfiguration() throws IllegalStateException {
         return suggestCsvConfiguration(null);
@@ -239,7 +237,7 @@ public class CsvConfigurationDetection {
                             multiLineConfiguration);
             final Table table = testDataContext.getDefaultSchema().getTable(0);
             if (_columnNames == null) {
-                _columnNames = Arrays.asList(testDataContext.getDefaultSchema().getTable(0).getColumnNames());
+                _columnNames = testDataContext.getDefaultSchema().getTable(0).getColumnNames();
             }
             try (DataSet dataSet = testDataContext.query().from(table).select(table.getColumns()).execute()) {
                 while (dataSet.next()) {

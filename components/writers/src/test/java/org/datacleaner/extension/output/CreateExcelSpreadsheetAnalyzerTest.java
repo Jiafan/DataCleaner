@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -373,12 +373,12 @@ public class CreateExcelSpreadsheetAnalyzerTest extends TestCase {
         final ExcelDatastore outputDatastore =
                 new ExcelDatastore(filename, new FileResource(analyzer.file), analyzer.file.getAbsolutePath());
         try (UpdateableDatastoreConnection outputDatastoreConnection = outputDatastore.openConnection()) {
-            final String[] columnNames =
+            final List<String> columnNames =
                     outputDatastoreConnection.getSchemaNavigator().getDefaultSchema().getTableByName(analyzer.sheetName)
                             .getColumnNames();
-            assertEquals(2, columnNames.length);
-            assertEquals("CustomNameForStringColumn", columnNames[0]);
-            assertEquals("CustomNameForIntegerColumn", columnNames[1]);
+            assertEquals(2, columnNames.size());
+            assertEquals("CustomNameForStringColumn", columnNames.get(0));
+            assertEquals("CustomNameForIntegerColumn", columnNames.get(1));
         }
     }
 

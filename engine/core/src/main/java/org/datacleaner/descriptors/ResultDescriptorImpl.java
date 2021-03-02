@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -35,7 +35,7 @@ import org.datacleaner.util.ReflectionUtils;
  * Default {@link ResultDescriptor} implementation which can be used stand-alone
  * or as a delegate for e.g. an {@link AnalyzerDescriptor} implementation.
  */
-final class ResultDescriptorImpl implements ResultDescriptor {
+public final class ResultDescriptorImpl implements ResultDescriptor {
 
     private static final long serialVersionUID = 1L;
 

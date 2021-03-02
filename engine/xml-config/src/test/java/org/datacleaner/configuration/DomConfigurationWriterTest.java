@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -34,15 +34,14 @@ import org.apache.metamodel.util.FileResource;
 import org.apache.metamodel.util.Resource;
 import org.datacleaner.connection.CouchDbDatastore;
 import org.datacleaner.connection.CsvDatastore;
-import org.datacleaner.connection.DataHubDatastore;
 import org.datacleaner.connection.Datastore;
+import org.datacleaner.connection.DynamoDbDatastore;
 import org.datacleaner.connection.ExcelDatastore;
 import org.datacleaner.connection.FixedWidthDatastore;
 import org.datacleaner.connection.JdbcDatastore;
 import org.datacleaner.connection.JsonDatastore;
 import org.datacleaner.connection.MongoDbDatastore;
 import org.datacleaner.connection.SalesforceDatastore;
-import org.datacleaner.metamodel.datahub.DataHubSecurityMode;
 import org.datacleaner.reference.DatastoreDictionary;
 import org.datacleaner.reference.DatastoreSynonymCatalog;
 import org.datacleaner.reference.RegexStringPattern;
@@ -107,6 +106,23 @@ public class DomConfigurationWriterTest {
 
         assertEquals(
                 "<excel-datastore description=\"bar\" name=\"foo\">\n  <filename>baz.txt</filename>\n</excel-datastore>\n",
+                str);
+    }
+    
+    @Test
+    public void testExternalizeDynamoDatastore() throws Exception {
+        final DynamoDbDatastore ds = new DynamoDbDatastore("my dyno", "west", "key", "secret", null); 
+        ds.setDescription("bar");
+
+        final Element elem = configurationWriter.toElement(ds);
+
+        final String str = transform(elem);
+
+        assertEquals("<dynamodb-datastore description=\"bar\" name=\"my dyno\">\n"
+                + "  <region>west</region>\n"
+                + "  <accessKeyId>key</accessKeyId>\n"
+                + "  <secretAccessKey>enc:brIAhgjdd+M=</secretAccessKey>\n" 
+                + "</dynamodb-datastore>\n",
                 str);
     }
 
@@ -215,29 +231,6 @@ public class DomConfigurationWriterTest {
                         + PASSWORD_ENCODED + "</password>\n"
                         + "  <security-token>securityToken</security-token>\n</salesforce-datastore>\n",
                 transform(externalized));
-    }
-
-    @Test
-    public void testExternalizeDataHubDatastoreWithPassword() throws Exception {
-        final Datastore datastore = new DataHubDatastore("name", "hostname", 1234, "user", "password", false, false,
-                DataHubSecurityMode.DEFAULT);
-
-        final Element externalized = configurationWriter.externalize(datastore);
-        final StringBuilder expectedConfiguration = new StringBuilder();
-
-        // @formatter:off
-        expectedConfiguration
-                .append("<datahub-datastore name=\"name\">\n")
-                .append("  <host>hostname</host>\n")
-                .append("  <port>1234</port>\n")
-                .append("  <username>user</username>\n")
-                .append("  <password>" + PASSWORD_ENCODED + "</password>\n")
-                .append("  <https>false</https>\n")
-                .append("  <acceptunverifiedsslpeers>false</acceptunverifiedsslpeers>\n")
-                .append("  <datahubsecuritymode>DEFAULT</datahubsecuritymode>\n")
-                .append("</datahub-datastore>\n");
-        // @formatter:on
-        assertEquals(expectedConfiguration.toString(), transform(externalized));
     }
 
     @Test

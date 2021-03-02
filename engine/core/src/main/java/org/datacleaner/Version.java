@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -42,16 +42,6 @@ public class Version {
         VERSION = determineVersion();
         EDITION = determineEdition();
         DISTRIBUTION_VERSION = determineDistributionVersion();
-    }
-
-    /**
-     * @return
-     *
-     * @deprecated use {@link #getVersion()} instead
-     */
-    @Deprecated
-    public static String get() {
-        return getVersion();
     }
 
     public static String getVersion() {
@@ -106,7 +96,10 @@ public class Version {
     }
 
     private static String determineVersion() {
-        return determineVersionFromMavenProperties("org.eobjects.datacleaner", "DataCleaner-api", UNKNOWN_VERSION);
+        final String version =
+                determineVersionFromMavenProperties("org.eobjects.datacleaner", "DataCleaner-api", UNKNOWN_VERSION);
+        // allow overriding version for testing
+        return SystemProperties.getString("org.datacleaner.version.override", version);
     }
 
     private static String determineVersionFromMavenProperties(final String groupId, final String artifactId,

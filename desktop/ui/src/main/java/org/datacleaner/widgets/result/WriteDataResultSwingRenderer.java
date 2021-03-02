@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -166,7 +166,7 @@ public class WriteDataResultSwingRenderer extends AbstractRenderer<WriteDataResu
                             JOptionPane.showMessageDialog(editorPane, "Saved datastore: " + errorDatastore.getName());
                         } else if ("https://datacleaner.org/preview_datastore".equals(href)) {
                             try (DatastoreConnection errorCon = errorDatastore.openConnection()) {
-                                final Table table = errorCon.getDataContext().getDefaultSchema().getTables()[0];
+                                final Table table = errorCon.getDataContext().getDefaultSchema().getTable(0);
                                 final PreviewSourceDataActionListener actionListener =
                                         new PreviewSourceDataActionListener(windowContext, errorDatastore, table);
                                 actionListener.actionPerformed(null);

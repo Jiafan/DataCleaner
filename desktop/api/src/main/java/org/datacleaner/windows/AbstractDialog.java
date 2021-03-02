@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -45,6 +45,7 @@ import org.datacleaner.util.WidgetUtils;
 public abstract class AbstractDialog extends JDialog implements DCWindow, WindowListener {
 
     private static final long serialVersionUID = 1L;
+    
     private final WindowContext _windowContext;
     private volatile boolean initialized = false;
     private Image _bannerImage;
@@ -228,7 +229,9 @@ public abstract class AbstractDialog extends JDialog implements DCWindow, Window
 
     protected abstract String getBannerTitle();
 
-    protected abstract int getDialogWidth();
+    protected int getDialogWidth() {
+        return WidgetUtils.DIALOG_WIDTH_NORMAL;
+    }
 
     protected abstract JComponent getDialogContent();
 

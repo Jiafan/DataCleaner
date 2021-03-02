@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -32,14 +32,15 @@ import org.datacleaner.windows.CassandraDatastoreDialog;
 import org.datacleaner.windows.CompositeDatastoreDialog;
 import org.datacleaner.windows.CouchDbDatastoreDialog;
 import org.datacleaner.windows.CsvDatastoreDialog;
-import org.datacleaner.windows.DataHubDatastoreDialog;
 import org.datacleaner.windows.DbaseDatastoreDialog;
+import org.datacleaner.windows.DynamoDbDatastoreDialog;
 import org.datacleaner.windows.ElasticSearchDatastoreDialog;
 import org.datacleaner.windows.ExcelDatastoreDialog;
 import org.datacleaner.windows.FixedWidthDatastoreDialog;
 import org.datacleaner.windows.HBaseDatastoreDialog;
 import org.datacleaner.windows.JdbcDatastoreDialog;
 import org.datacleaner.windows.JsonDatastoreDialog;
+import org.datacleaner.windows.KafkaDatastoreDialog;
 import org.datacleaner.windows.MongoDbDatastoreDialog;
 import org.datacleaner.windows.Neo4jDatastoreDialog;
 import org.datacleaner.windows.SalesforceDatastoreDialog;
@@ -91,10 +92,6 @@ public class DatastoreDescriptors {
             new DatastoreDescriptorImpl("SugarCRM", "Connect to a SugarCRM system", SugarCrmDatastore.class,
                     SugarCrmDatastoreDialog.class, IconUtils.SUGAR_CRM_IMAGEPATH, true);
 
-    private static final DatastoreDescriptor DATAHUB_DATASTORE_DESCRIPTOR =
-            new DatastoreDescriptorImpl("DataHub", "Connect to DataHub", DataHubDatastore.class,
-                    DataHubDatastoreDialog.class, IconUtils.DATAHUB_IMAGEPATH, true);
-
     private static final DatastoreDescriptor MONGODB_DATASTORE_DESCRIPTOR =
             new DatastoreDescriptorImpl("MongoDB database", "Connect to a MongoDB database", MongoDbDatastore.class,
                     MongoDbDatastoreDialog.class, IconUtils.MONGODB_IMAGEPATH, true);
@@ -102,6 +99,14 @@ public class DatastoreDescriptors {
     private static final DatastoreDescriptor COUCHDB_DATASTORE_DESCRIPTOR =
             new DatastoreDescriptorImpl("CouchDB database", "Connect to an Apache CouchDB database",
                     CouchDbDatastore.class, CouchDbDatastoreDialog.class, IconUtils.COUCHDB_IMAGEPATH, true);
+    
+    private static final DatastoreDescriptor DYNAMODB_DATASTORE_DESCRIPTOR =
+            new DatastoreDescriptorImpl("AWS DynamoDB database", "Connect to an AWS DynamoDB database",
+                    DynamoDbDatastore.class, DynamoDbDatastoreDialog.class, IconUtils.DYNAMODB_IMAGEPATH, true);
+    
+    private static final DatastoreDescriptor KAFKA_DATASTORE_DESCRIPTOR =
+            new DatastoreDescriptorImpl("Kafka stream", "Connect to an Apache Kafka stream",
+                    KafkaDatastore.class, KafkaDatastoreDialog.class, IconUtils.KAFKA_IMAGEPATH, true);
 
     private static final DatastoreDescriptor ELASTICSEARCH_DATASTORE_DESCRIPTOR =
             new DatastoreDescriptorImpl("ElasticSearch index", "Connect to an ElasticSearch index",
@@ -189,7 +194,6 @@ public class DatastoreDescriptors {
 
         availableCloudBasedDatabaseDescriptors.add(SALESFORCE_DATASTORE_DESCRIPTOR);
         availableCloudBasedDatabaseDescriptors.add(SUGARCRM_DATASTORE_DESCRIPTOR);
-        availableCloudBasedDatabaseDescriptors.add(DATAHUB_DATASTORE_DESCRIPTOR);
         return availableCloudBasedDatabaseDescriptors;
     }
 
@@ -207,6 +211,8 @@ public class DatastoreDescriptors {
         availableCloudBasedDatabaseDescriptors.add(CASSANDRA_DATASTORE_DESCRIPTOR);
         availableCloudBasedDatabaseDescriptors.add(MONGODB_DATASTORE_DESCRIPTOR);
         availableCloudBasedDatabaseDescriptors.add(COUCHDB_DATASTORE_DESCRIPTOR);
+        availableCloudBasedDatabaseDescriptors.add(DYNAMODB_DATASTORE_DESCRIPTOR);
+        availableCloudBasedDatabaseDescriptors.add(KAFKA_DATASTORE_DESCRIPTOR);
         availableCloudBasedDatabaseDescriptors.add(NEO4J_DATASTORE_DESCRIPTOR);
 
         return availableCloudBasedDatabaseDescriptors;
@@ -225,9 +231,10 @@ public class DatastoreDescriptors {
         datastoreDescriptors.add(JSON_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(SALESFORCE_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(SUGARCRM_DATASTORE_DESCRIPTOR);
-        datastoreDescriptors.add(DATAHUB_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(MONGODB_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(COUCHDB_DATASTORE_DESCRIPTOR);
+        datastoreDescriptors.add(DYNAMODB_DATASTORE_DESCRIPTOR);
+        datastoreDescriptors.add(KAFKA_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(ELASTICSEARCH_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(CASSANDRA_DATASTORE_DESCRIPTOR);
         datastoreDescriptors.add(HBASE_DATASTORE_DESCRIPTOR);
@@ -283,7 +290,7 @@ public class DatastoreDescriptors {
         }
 
         // composite datastore
-        if (!alreadyAddedDatabaseNames.contains(COMPOSITE_DATASTORE_DESCRIPTOR)) {
+        if (!alreadyAddedDatabaseNames.contains(COMPOSITE_DATASTORE_DESCRIPTOR.getName())) {
             datastoreDescriptors.add(COMPOSITE_DATASTORE_DESCRIPTOR);
         }
 

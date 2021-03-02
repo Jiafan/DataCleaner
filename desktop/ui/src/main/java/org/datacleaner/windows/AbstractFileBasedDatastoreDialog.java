@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -88,7 +89,7 @@ public abstract class AbstractFileBasedDatastoreDialog<D extends Datastore> exte
      * Max amount of columns to display in the preview table
      */
     private static final int PREVIEW_COLUMNS = 10;
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(AbstractFileBasedDatastoreDialog.class);
     private final FilenameTextField _filenameField;
     private final DCPanel _previewTablePanel;
     private final DCTable _previewTable;
@@ -216,7 +217,7 @@ public abstract class AbstractFileBasedDatastoreDialog<D extends Datastore> exte
     @Override
     protected int getDialogWidth() {
         if (isPreviewTableEnabled()) {
-            return 650;
+            return WidgetUtils.DIALOG_WIDTH_WIDE;
         }
         return super.getDialogWidth();
     }
@@ -303,10 +304,10 @@ public abstract class AbstractFileBasedDatastoreDialog<D extends Datastore> exte
             final DataContext dc = con.getDataContext();
             final Table table = getPreviewTable(dc);
 
-            Column[] columns = table.getColumns();
-            if (columns.length > getPreviewColumns()) {
+            List<Column> columns = table.getColumns();
+            if (columns.size() > getPreviewColumns()) {
                 // include max 10 columns
-                columns = Arrays.copyOf(columns, getPreviewColumns());
+                columns = columns.stream().limit(getPreviewColumns()).collect(Collectors.toList());
             }
             final Query q = dc.query().from(table).select(columns).toQuery();
             q.setMaxRows(7);
@@ -373,7 +374,7 @@ public abstract class AbstractFileBasedDatastoreDialog<D extends Datastore> exte
     }
 
     protected Table getPreviewTable(final DataContext dc) {
-        return dc.getDefaultSchema().getTables()[0];
+        return dc.getDefaultSchema().getTable(0);
     }
 
     protected int getPreviewColumns() {

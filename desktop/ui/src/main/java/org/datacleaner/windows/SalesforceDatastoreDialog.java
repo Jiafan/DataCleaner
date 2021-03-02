@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -86,7 +86,6 @@ public class SalesforceDatastoreDialog extends AbstractDatastoreDialog<Salesforc
         _securityTokenTextField.getDocument().addDocumentListener(genericDocumentListener);
         _endpointUrlComboBox.addListener(item -> validateAndUpdate());
 
-
         if (originalDatastore != null) {
             _datastoreNameTextField.setText(originalDatastore.getName());
             _datastoreNameTextField.setEditable(false);
@@ -110,12 +109,6 @@ public class SalesforceDatastoreDialog extends AbstractDatastoreDialog<Salesforc
         final String username = _usernameTextField.getText();
         if (StringUtils.isNullOrEmpty(username)) {
             setStatusError("Please enter username");
-            return false;
-        }
-
-        final String securityToken = _securityTokenTextField.getText();
-        if (StringUtils.isNullOrEmpty(securityToken)) {
-            setStatusError("Please enter Salesforce security token");
             return false;
         }
 

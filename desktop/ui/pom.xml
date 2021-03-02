@@ -3,12 +3,13 @@
 	<parent>
 		<groupId>org.eobjects.datacleaner</groupId>
 		<artifactId>DataCleaner-desktop</artifactId>
-		<version>5.1.6-SNAPSHOT</version>
+		<version>5.7.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>DataCleaner-desktop-ui</artifactId>
 	<packaging>jar</packaging>
 
 	<build>
+		<finalName>DataCleaner</finalName>
 		<plugins>
 			<plugin>
 				<!-- make the jar file executable when dependencies are available in 
@@ -58,29 +59,26 @@
 					<source>${project.build.directory}/lib</source>
 				</configuration>
 			</plugin>
-
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
+				<artifactId>maven-assembly-plugin</artifactId>
+
+				<configuration>
+					<finalName>DataCleaner-${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>src/assembly/dist.xml</descriptor>
+					</descriptors>
+				</configuration>
 				<executions>
 					<execution>
-						<id>copy-icons</id>
-						<phase>prepare-package</phase>
+						<phase>package</phase>
 						<goals>
-							<goal>run</goal>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<target name="copyicons">
-						<copy file="${project.build.directory}/classes/images/actions/add_dark.png" tofile="${project.build.directory}/classes/images/actions/add.png" />
-						<copy file="${project.build.directory}/classes/images/actions/close_dark.png" tofile="${project.build.directory}/classes/images/actions/close.png" />
-						<copy file="${project.build.directory}/classes/images/actions/remove_dark.png" tofile="${project.build.directory}/classes/images/actions/remove.png" />
-						<copy file="${project.build.directory}/classes/images/actions/save_dark.png" tofile="${project.build.directory}/classes/images/actions/save.png" />
-						<copy file="${project.build.directory}/classes/images/actions/scrolldown_dark.png" tofile="${project.build.directory}/classes/images/actions/scrolldown.png" />
-					</target>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -146,11 +144,6 @@
 			<artifactId>DataCleaner-html-rendering</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eobjects.datacleaner</groupId>
-			<artifactId>DataCleaner-remote-components</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<!-- JDBC drivers -->
 		<dependency>
@@ -188,23 +181,14 @@
 		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-visualization</artifactId>
-			<version>2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-graph-impl</artifactId>
-			<version>2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-io</artifactId>
-			<version>2.0.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>stax</groupId>
-					<artifactId>stax-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.simpleframework</groupId>
@@ -229,10 +213,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
 		</dependency>
 		<dependency>
@@ -243,7 +223,7 @@
 		<!-- Enough Hadoop/Spark for uploading and submitting jobs -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-launcher_2.11</artifactId>
+			<artifactId>spark-launcher_2.12</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
@@ -278,6 +258,11 @@
 			<artifactId>htmlparser</artifactId>
 			<version>1.4</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eobjects.datacleaner</groupId>
+			<artifactId>DataCleaner-oss-branding</artifactId>
+			<version>5.7.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

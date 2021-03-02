@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -282,7 +282,7 @@ public final class AnalysisJobBuilder implements Closeable {
      * @param table
      */
     public AnalysisJobBuilder removeSourceTable(final Table table) {
-        final Column[] cols = table.getColumns();
+        final List<Column> cols = table.getColumns();
         for (final Column col : cols) {
             removeSourceColumn(col);
         }

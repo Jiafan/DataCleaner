@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -24,12 +24,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.apache.metamodel.util.FileResource;
-import org.apache.metamodel.util.Ref;
 import org.datacleaner.api.AnalyzerResult;
 import org.datacleaner.job.ComponentJob;
 import org.datacleaner.result.AnalysisResult;
@@ -46,10 +46,10 @@ import org.datacleaner.widgets.DCFileChooser;
  */
 public class SaveAnalysisResultActionListener implements ActionListener {
 
-    private final Ref<AnalysisResult> _result;
+    private final Supplier<AnalysisResult> _result;
     private final UserPreferences _userPreferences;
 
-    public SaveAnalysisResultActionListener(final Ref<AnalysisResult> result, final UserPreferences userPreferences) {
+    public SaveAnalysisResultActionListener(final Supplier<AnalysisResult> result, final UserPreferences userPreferences) {
         _result = result;
         _userPreferences = userPreferences;
     }

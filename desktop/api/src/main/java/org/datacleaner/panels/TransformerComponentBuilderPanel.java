@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -38,7 +38,6 @@ import org.datacleaner.api.Transformer;
 import org.datacleaner.bootstrap.WindowContext;
 import org.datacleaner.configuration.DataCleanerConfiguration;
 import org.datacleaner.data.MutableInputColumn;
-import org.datacleaner.descriptors.RemoteTransformerDescriptor;
 import org.datacleaner.job.builder.TransformerChangeListener;
 import org.datacleaner.job.builder.TransformerComponentBuilder;
 import org.datacleaner.util.IconUtils;
@@ -155,9 +154,6 @@ public class TransformerComponentBuilderPanel extends AbstractComponentBuilderPa
     }
 
     protected int getPreviewRows() {
-        if (_componentBuilder.getDescriptor() instanceof RemoteTransformerDescriptor) {
-            return 10;
-        }
         return PreviewTransformedDataActionListener.DEFAULT_PREVIEW_ROWS;
     }
 

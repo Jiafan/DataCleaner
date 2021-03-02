@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -55,8 +55,6 @@ import org.datacleaner.data.TransformedInputColumn;
 import org.datacleaner.descriptors.AnalyzerDescriptor;
 import org.datacleaner.descriptors.ComponentDescriptor;
 import org.datacleaner.descriptors.ConfiguredPropertyDescriptor;
-import org.datacleaner.descriptors.RemoteDescriptorProvider;
-import org.datacleaner.descriptors.RemoteTransformerDescriptor;
 import org.datacleaner.job.AnalysisJob;
 import org.datacleaner.job.ComponentConfiguration;
 import org.datacleaner.job.ComponentRequirement;
@@ -121,7 +119,6 @@ public abstract class AbstractComponentBuilder<D extends ComponentDescriptor<E>,
 
         _configurableBean = _descriptor.newInstance();
         _metadataProperties = new LinkedHashMap<>();
-        initMetadataProperties();
         _removalListeners = new ArrayList<>(1);
     }
 
@@ -147,15 +144,6 @@ public abstract class AbstractComponentBuilder<D extends ComponentDescriptor<E>,
         return (E[]) result;
     }
 
-    private void initMetadataProperties() {
-        if (_descriptor instanceof RemoteTransformerDescriptor) {
-            final RemoteDescriptorProvider remoteDescriptorProvider =
-                    ((RemoteTransformerDescriptor<?>) _descriptor).getRemoteDescriptorProvider();
-            final String source = remoteDescriptorProvider.getServerData().getServerName();
-            _metadataProperties.put("source", source);
-        }
-    }
-
     /**
      * Gets metadata properties as a map.
      *
@@ -169,7 +157,6 @@ public abstract class AbstractComponentBuilder<D extends ComponentDescriptor<E>,
     @Override
     public void setMetadataProperties(final Map<String, String> metadataProperties) {
         _metadataProperties.clear();
-        initMetadataProperties();
 
         if (metadataProperties != null) {
             _metadataProperties.putAll(metadataProperties);
@@ -920,23 +907,23 @@ public abstract class AbstractComponentBuilder<D extends ComponentDescriptor<E>,
             _outputDataStreamJobs.put(outputDataStream, analysisJobBuilder);
         } else {
             final List<MetaModelInputColumn> sourceColumns = analysisJobBuilder.getSourceColumns();
-            final String[] sourceColumnsNames = new String[sourceColumns.size()];
+            final List<String> sourceColumnsNames = new ArrayList<>(sourceColumns.size());
             for (int i = 0; i < sourceColumns.size(); i++) {
-                sourceColumnsNames[i] = sourceColumns.get(i).getName();
+                sourceColumnsNames.add(sourceColumns.get(i).getName());
             }
             // If the one of the components has had changed output columns names it won't be visible
             // in the analysisJobBuilder's source columns represented by the outputStream. 
             // Therefore, we check if there are any changes in the name of the columns. see issue #1616(github).
             final Table table = outputDataStream.getTable();
-            final String[] outputStreamColumnNames = table.getColumnNames();
-            if (!Arrays.equals(sourceColumnsNames, outputStreamColumnNames)) {
+            final List<String> outputStreamColumnNames = table.getColumnNames();
+            if (!sourceColumnsNames.equals(outputStreamColumnNames)) {
                 //avoid triggering listeners when the outputstream is consumed
                 if (!isOutputDataStreamConsumed(outputDataStream)) {
                     for (int i = 0; i < sourceColumns.size(); i++) {
                         analysisJobBuilder.removeSourceColumn(sourceColumns.get(i));
                     }
                     //Add the new source columns
-                    final Column[] columns = table.getColumns();
+                    final List<Column> columns = table.getColumns();
                     analysisJobBuilder.addSourceColumns(columns);
                 }
             }
@@ -1058,7 +1045,8 @@ public abstract class AbstractComponentBuilder<D extends ComponentDescriptor<E>,
 
         if (jobBuilder != null) {
             // notify job builder of removed source columns
-            for (final Column column : existingTable.getColumns()) {
+            final List<Column> currentColumns = new ArrayList<>(existingTable.getColumns());
+            for (final Column column : currentColumns) {
                 jobBuilder.removeSourceColumn(column);
             }
             // notify the job builder of added source columns

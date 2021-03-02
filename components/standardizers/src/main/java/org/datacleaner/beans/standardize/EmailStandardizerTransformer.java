@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -29,7 +29,7 @@ import org.datacleaner.api.InputColumn;
 import org.datacleaner.api.InputRow;
 import org.datacleaner.api.OutputColumns;
 import org.datacleaner.api.Transformer;
-import org.datacleaner.components.categories.MatchingAndStandardizationCategory;
+import org.datacleaner.components.categories.ContactDataCategory;
 import org.datacleaner.util.HasGroupLiteral;
 import org.datacleaner.util.NamedPattern;
 import org.datacleaner.util.NamedPatternMatch;
@@ -39,7 +39,7 @@ import org.datacleaner.util.NamedPatternMatch;
  */
 @Named("Email standardizer")
 @Description("Retrieve the username or domain from an email address.")
-@Categorized({ MatchingAndStandardizationCategory.class })
+@Categorized({ ContactDataCategory.class })
 @Deprecated
 public class EmailStandardizerTransformer implements Transformer {
 

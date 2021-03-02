@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -22,8 +22,8 @@ package org.datacleaner.cli;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
-import org.apache.metamodel.util.Ref;
 import org.datacleaner.api.AnalyzerResult;
 import org.datacleaner.api.Renderer;
 import org.datacleaner.configuration.DataCleanerConfiguration;
@@ -38,7 +38,7 @@ public class TextAnalysisResultWriter implements AnalysisResultWriter {
 
     @Override
     public void write(final AnalysisResult result, final DataCleanerConfiguration configuration,
-            final Ref<Writer> writerRef, final Ref<OutputStream> outputStreamRef) throws Exception {
+            final Supplier<Writer> writerRef, final Supplier<OutputStream> outputStreamRef) throws Exception {
         final Writer writer = writerRef.get();
         writer.write("SUCCESS!\n");
 

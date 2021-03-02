@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-import org.apache.metamodel.util.Predicate;
-import org.apache.metamodel.util.Ref;
 import org.apache.metamodel.util.TruePredicate;
 import org.datacleaner.api.AnalyzerResult;
 import org.datacleaner.api.Renderer;
@@ -45,7 +45,6 @@ import org.datacleaner.result.AnalysisResultWriter;
 import org.datacleaner.result.renderer.HtmlRenderingFormat;
 import org.datacleaner.result.renderer.RendererFactory;
 import org.datacleaner.util.ComponentJobComparator;
-import org.datacleaner.util.IconUtils;
 import org.datacleaner.util.LabelUtils;
 import org.datacleaner.util.StringUtils;
 import org.slf4j.Logger;
@@ -84,7 +83,7 @@ public class HtmlAnalysisResultWriter implements AnalysisResultWriter {
 
     @Override
     public void write(final AnalysisResult result, final DataCleanerConfiguration configuration,
-            final Ref<Writer> writerRef, final Ref<OutputStream> outputStreamRef) throws IOException {
+            final Supplier<Writer> writerRef, final Supplier<OutputStream> outputStreamRef) throws IOException {
         final Writer writer = writerRef.get();
         write(result, configuration, writer);
     }
@@ -102,7 +101,7 @@ public class HtmlAnalysisResultWriter implements AnalysisResultWriter {
             final ComponentJob componentJob = entry.getKey();
             final AnalyzerResult analyzerResult = entry.getValue();
 
-            if (_jobInclusionPredicate.eval(entry)) {
+            if (_jobInclusionPredicate.test(entry)) {
                 final Renderer<? super AnalyzerResult, ? extends HtmlFragment> renderer =
                         rendererFactory.getRenderer(analyzerResult, HtmlRenderingFormat.class);
                 if (renderer == null) {
@@ -237,7 +236,7 @@ public class HtmlAnalysisResultWriter implements AnalysisResultWriter {
                     final ComponentDescriptor<?> descriptor = componentJob.getDescriptor();
                     if (!descriptor.equals(lastDescriptor)) {
                         final ComponentDocumentationWrapper wrapper = new ComponentDocumentationWrapper(descriptor);
-                        final String iconSrc = wrapper.getIconSrc(IconUtils.ICON_SIZE_MEDIUM);
+                        final String iconSrc = wrapper.getIconSrc(22);
                         final String styleName = toStyleName(descriptor.getDisplayName());
                         writer.write("<li style=\"background-image: url(" + iconSrc
                                 + ")\"><a href=\"#analysisResultDescriptorGroup_" + styleName + "\">");

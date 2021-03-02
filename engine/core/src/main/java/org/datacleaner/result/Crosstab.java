@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
-import org.apache.metamodel.util.Ref;
 import org.apache.metamodel.util.SerializableRef;
 import org.datacleaner.util.ReflectionUtils;
 
@@ -41,7 +41,7 @@ public final class Crosstab<E extends Serializable> implements Serializable {
     private final List<CrosstabDimension> dimensions;
     private final Map<String, E> values = new HashMap<>();
     private final Class<E> valueClass;
-    private final Map<String, Ref<ResultProducer>> resultProducers = new HashMap<>();
+    private final Map<String, Supplier<ResultProducer>> resultProducers = new HashMap<>();
 
     public Crosstab(final Class<E> valueClass, final CrosstabDimension... dimensions) {
         this.valueClass = valueClass;
@@ -187,14 +187,14 @@ public final class Crosstab<E extends Serializable> implements Serializable {
         if (resultProducer == null) {
             resultProducers.remove(key);
         } else {
-            final Ref<ResultProducer> resultProducerRef = new SerializableRef<>(resultProducer);
+            final Supplier<ResultProducer> resultProducerRef = new SerializableRef<>(resultProducer);
             resultProducers.put(key, resultProducerRef);
         }
     }
 
     protected ResultProducer explore(final String[] categories) {
         final String key = getKey(categories);
-        final Ref<ResultProducer> resultProducerRef = resultProducers.get(key);
+        final Supplier<ResultProducer> resultProducerRef = resultProducers.get(key);
         if (resultProducerRef == null) {
             return null;
         }

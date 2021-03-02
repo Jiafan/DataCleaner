@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -25,11 +25,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
-import org.apache.metamodel.DataContextFactory;
 import org.apache.metamodel.UpdateableDataContext;
 import org.apache.metamodel.create.CreateTable;
 import org.apache.metamodel.drop.DropTable;
+import org.apache.metamodel.jdbc.JdbcDataContext;
 import org.apache.metamodel.schema.Schema;
 import org.datacleaner.api.InputColumn;
 import org.datacleaner.connection.Datastore;
@@ -79,10 +80,10 @@ final class DatastoreOutputWriter implements OutputWriter {
         tableName = DatastoreOutputUtils.safeName(tableName);
 
         synchronized (DatastoreOutputWriter.class) {
-            final UpdateableDataContext dc = DataContextFactory.createJdbcDataContext(_connection);
+            final UpdateableDataContext dc = new JdbcDataContext(_connection);
             dc.refreshSchemas();
             final Schema schema = dc.getDefaultSchema();
-            final String[] tableNames = schema.getTableNames();
+            final List<String> tableNames = schema.getTableNames();
 
             if (truncateExisting) {
                 _tableName = tableName;
@@ -193,8 +194,8 @@ final class DatastoreOutputWriter implements OutputWriter {
 
     public static boolean isDirectlyInsertableType(final InputColumn<?> column) {
         final Class<?> dataType = column.getDataType();
-        return ReflectionUtils.isNumber(dataType) || ReflectionUtils.isDate(dataType) || ReflectionUtils
-                .isBoolean(dataType);
+        return ReflectionUtils.isNumber(dataType) || ReflectionUtils.isDate(dataType)
+                || ReflectionUtils.isBoolean(dataType);
     }
 
     @Override

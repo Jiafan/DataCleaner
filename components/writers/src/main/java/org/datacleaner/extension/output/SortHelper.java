@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -58,7 +58,7 @@ public class SortHelper {
                 // exactly the same. Now look at other values of all the
                 // columns to
                 // find if the two rows are same.
-                final int numberOfSelectItems = row1.getSelectItems().length;
+                final int numberOfSelectItems = row1.getSelectItems().size();
                 for (int i = 0; i < numberOfSelectItems; i++) {
                     final String rowValue1 = (String) row1.getValue(i);
                     final String rowValue2 = (String) row2.getValue(i);

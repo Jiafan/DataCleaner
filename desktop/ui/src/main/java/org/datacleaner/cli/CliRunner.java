@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -42,7 +43,6 @@ import org.apache.metamodel.schema.Table;
 import org.apache.metamodel.util.FileHelper;
 import org.apache.metamodel.util.ImmutableRef;
 import org.apache.metamodel.util.LazyRef;
-import org.apache.metamodel.util.Ref;
 import org.apache.metamodel.util.Resource;
 import org.datacleaner.configuration.ConfigurationReaderInterceptor;
 import org.datacleaner.configuration.DataCleanerConfiguration;
@@ -75,8 +75,8 @@ public final class CliRunner implements Closeable {
     private static final Logger logger = LoggerFactory.getLogger(CliRunner.class);
 
     private final CliArguments _arguments;
-    private final Ref<OutputStream> _outputStreamRef;
-    private final Ref<Writer> _writerRef;
+    private final Supplier<OutputStream> _outputStreamRef;
+    private final Supplier<Writer> _writerRef;
     private final boolean _closeOut;
 
     /**
@@ -248,7 +248,7 @@ public final class CliRunner implements Closeable {
                     if (table == null) {
                         write("No such table: " + tableName);
                     } else {
-                        final String[] columnNames = table.getColumnNames();
+                        final List<String> columnNames = table.getColumnNames();
                         write("Columns:");
                         write("--------");
                         for (final String columnName : columnNames) {
@@ -283,8 +283,8 @@ public final class CliRunner implements Closeable {
                 if (schema == null) {
                     System.err.println("No such schema: " + schemaName);
                 } else {
-                    final String[] tableNames = schema.getTableNames();
-                    if (tableNames == null || tableNames.length == 0) {
+                    final List<String> tableNames = schema.getTableNames();
+                    if (tableNames == null || tableNames.isEmpty()) {
                         System.err.println("No tables in schema!");
                     } else {
                         write("Tables:");
@@ -310,8 +310,8 @@ public final class CliRunner implements Closeable {
                 System.err.println("No such datastore: " + datastoreName);
             } else {
                 final DatastoreConnection con = ds.openConnection();
-                final String[] schemaNames = con.getDataContext().getSchemaNames();
-                if (schemaNames == null || schemaNames.length == 0) {
+                final List<String> schemaNames = con.getDataContext().getSchemaNames();
+                if (schemaNames == null || schemaNames.isEmpty()) {
                     write("No schemas in datastore!");
                 } else {
                     write("Schemas:");
@@ -494,7 +494,7 @@ public final class CliRunner implements Closeable {
         }
     }
 
-    private void close(final Ref<?> ref) {
+    private void close(final Supplier<?> ref) {
         if (ref != null) {
             if (ref instanceof LazyRef) {
                 final LazyRef<?> lazyRef = (LazyRef<?>) ref;

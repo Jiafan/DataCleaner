@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -53,7 +53,6 @@ import org.datacleaner.job.builder.ComponentBuilder;
 import org.datacleaner.job.builder.UnconfiguredConfiguredPropertyException;
 import org.datacleaner.panels.DCPanel;
 import org.datacleaner.result.renderer.RendererFactory;
-import org.datacleaner.user.UsageLogger;
 import org.datacleaner.user.UserPreferences;
 import org.datacleaner.util.DragDropUtils;
 import org.datacleaner.util.GraphUtils;
@@ -61,6 +60,7 @@ import org.datacleaner.util.IconUtils;
 import org.datacleaner.util.ImageManager;
 import org.datacleaner.util.LabelUtils;
 import org.datacleaner.util.WidgetFactory;
+import org.datacleaner.util.WidgetScreenResolutionAdjuster;
 import org.datacleaner.util.WidgetUtils;
 import org.datacleaner.widgets.Alignment;
 import org.datacleaner.windows.ComponentConfigurationDialog;
@@ -78,14 +78,15 @@ import edu.uci.ics.jung.visualization.VisualizationViewer.GraphMouse;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 
 /**
- * Class capable of creating graphs that visualize {@link AnalysisJob}s or parts
- * of them as a graph.
+ * Class capable of creating graphs that visualize {@link AnalysisJob}s or parts of them as a graph.
  */
 public final class JobGraph {
 
     public static final String MORE_COLUMNS_VERTEX = "...";
 
     private static final Logger logger = LoggerFactory.getLogger(JobGraph.class);
+
+    private final WidgetScreenResolutionAdjuster adjuster = WidgetScreenResolutionAdjuster.get();
     private final Map<ComponentBuilder, ComponentConfigurationDialog> _componentConfigurationDialogs;
     private final Map<Table, SourceTableConfigurationDialog> _tableConfigurationDialogs;
     private final Set<Object> _highlighedVertexes;
@@ -93,25 +94,22 @@ public final class JobGraph {
     private final RendererFactory _presenterRendererFactory;
     private final DCPanel _panel;
     private final WindowContext _windowContext;
-    private final UsageLogger _usageLogger;
     private final UserPreferences _userPreferences;
 
     private int _scrollHorizontal;
     private int _scrollVertical;
 
     public JobGraph(final WindowContext windowContext, final UserPreferences userPreferences,
-            final AnalysisJobBuilder analysisJobBuilder, final UsageLogger usageLogger) {
-        this(windowContext, userPreferences, analysisJobBuilder, null, usageLogger);
+            final AnalysisJobBuilder analysisJobBuilder) {
+        this(windowContext, userPreferences, analysisJobBuilder, null);
     }
 
     public JobGraph(final WindowContext windowContext, final UserPreferences userPreferences,
-            final AnalysisJobBuilder analysisJobBuilder, final RendererFactory presenterRendererFactory,
-            final UsageLogger usageLogger) {
+            final AnalysisJobBuilder analysisJobBuilder, final RendererFactory presenterRendererFactory) {
         _highlighedVertexes = new HashSet<>();
         _analysisJobBuilder = analysisJobBuilder;
         _userPreferences = userPreferences;
         _windowContext = windowContext;
-        _usageLogger = usageLogger;
         _componentConfigurationDialogs = new IdentityHashMap<>();
         _tableConfigurationDialogs = new IdentityHashMap<>();
 
@@ -169,7 +167,7 @@ public final class JobGraph {
         final Collection<Object> vertices = graph.getVertices();
         for (final Object vertex : vertices) {
             // manually initialize all vertices
-            layout.transform(vertex);
+            layout.apply(vertex);
         }
 
         if (!vertices.isEmpty() && !layoutTransformer.isTransformed()) {
@@ -241,9 +239,8 @@ public final class JobGraph {
 
             @Override
             public void paint(final Graphics g) {
-                final GradientPaint paint =
-                        new GradientPaint(0, 0, WidgetUtils.BG_COLOR_BRIGHTEST, 0, visualizationViewer.getHeight(),
-                                WidgetUtils.BG_COLOR_BRIGHTEST);
+                final GradientPaint paint = new GradientPaint(0, 0, WidgetUtils.BG_COLOR_BRIGHTEST, 0,
+                        visualizationViewer.getHeight(), WidgetUtils.BG_COLOR_BRIGHTEST);
                 if (g instanceof Graphics2D) {
                     final Graphics2D g2d = (Graphics2D) g;
                     g2d.setPaint(paint);
@@ -253,7 +250,7 @@ public final class JobGraph {
                 g.fillRect(0, 0, visualizationViewer.getWidth(), visualizationViewer.getHeight());
 
                 final Dimension size = _panel.getSize();
-                if (size.height < 300 || size.width < 500) {
+                if (size.height < adjuster.adjust(300) || size.width < adjuster.adjust(500)) {
                     // don't show the background hints - it will be too
                     // disturbing
                     return;
@@ -306,7 +303,7 @@ public final class JobGraph {
                                     "Click the 'Execute' button in the upper-right\ncorner when you're ready to run the job.";
                             imagePath = "images/window/canvas-bg-execute.png";
                             g.drawImage(ImageManager.get().getImage("images/window/canvas-bg-execute-hint.png"),
-                                    size.width - 175, 0, null);
+                                    size.width - adjuster.adjust(175), 0, null);
                         } else {
                             title = "Configure the job ...";
                             subTitle = "Job is not correctly configured";
@@ -333,17 +330,17 @@ public final class JobGraph {
                     }
                 }
 
-                final int yOffset = size.height - 150;
-                final int xOffset = 150;
+                final int yOffset = size.height - adjuster.adjust(150);
+                final int xOffset = adjuster.adjust(150);
 
                 final float titleFontSize;
                 final float subTitleFontSize;
-                if (size.width < 650) {
-                    titleFontSize = 30f;
-                    subTitleFontSize = 17f;
+                if (size.width < adjuster.adjust(650)) {
+                    titleFontSize = adjuster.adjust(30f);
+                    subTitleFontSize = adjuster.adjust(17f);
                 } else {
-                    titleFontSize = 35f;
-                    subTitleFontSize = 20f;
+                    titleFontSize = adjuster.adjust(35f);
+                    subTitleFontSize = adjuster.adjust(20f);
                 }
 
                 if (title != null) {
@@ -354,15 +351,16 @@ public final class JobGraph {
                 if (subTitle != null) {
                     final String[] lines = subTitle.split("\n");
                     g.setFont(WidgetUtils.FONT_BANNER.deriveFont(subTitleFontSize));
-                    int y = yOffset + 10;
+                    int y = yOffset + adjuster.adjust(10);
                     for (final String line : lines) {
-                        y = y + 30;
+                        y = y + adjuster.adjust(30);
                         g.drawString(line, xOffset, y);
                     }
                 }
 
                 if (imagePath != null) {
-                    g.drawImage(ImageManager.get().getImage(imagePath), xOffset - 120, yOffset - 30, null);
+                    g.drawImage(ImageManager.get().getImage(imagePath), xOffset - adjuster.adjust(120),
+                            yOffset - adjuster.adjust(30), null);
                 }
             }
         });
@@ -382,14 +380,14 @@ public final class JobGraph {
         }
 
         final JobGraphMouseListener graphMouseListener =
-                new JobGraphMouseListener(graphContext, linkPainter, actions, _windowContext, _usageLogger);
+                new JobGraphMouseListener(graphContext, linkPainter, actions, _windowContext);
 
         visualizationViewer.addGraphMouseListener(graphMouseListener);
         visualizationViewer.addMouseListener(graphMouseListener);
 
         final RenderContext<Object, JobGraphLink> renderContext = visualizationViewer.getRenderContext();
 
-        final JobGraphTransformers transformers = new JobGraphTransformers(_userPreferences, _highlighedVertexes);
+        final JobGraphTransformers transformers = new JobGraphTransformers(graph, _userPreferences, _highlighedVertexes);
 
         // instrument the render context with all our transformers and stuff
         renderContext.setVertexFontTransformer(transformers.getVertexFontTransformer());

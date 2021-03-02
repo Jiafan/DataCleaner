@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -84,9 +84,9 @@ public final class RowProcessingFunction
     public RowProcessingFunction(final SparkJobContext sparkJobContext) {
         _sparkJobContext = sparkJobContext;
     }
-
+    
     @Override
-    public Iterable<Tuple2<String, NamedAnalyzerResult>> call(final Iterator<InputRow> inputRowIterator)
+    public Iterator<Tuple2<String, NamedAnalyzerResult>> call(final Iterator<InputRow> inputRowIterator)
             throws Exception {
         logger.info("call(Iterator) invoked");
 
@@ -96,7 +96,7 @@ public final class RowProcessingFunction
 
         logger.info("call(Iterator) finished, returning {} results", analyzerResults.size());
 
-        return analyzerResults;
+        return analyzerResults.iterator();
     }
 
     @Override

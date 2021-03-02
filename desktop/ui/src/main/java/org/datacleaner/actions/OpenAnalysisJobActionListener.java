@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -196,8 +196,10 @@ public class OpenAnalysisJobActionListener implements ActionListener {
             final String message;
             if (Version.EDITION_COMMUNITY.equals(Version.getEdition())) {
                 message = "<html><p>Failed to open job because of a missing component:</p><pre>" + e.getMessage()
-                        + "</pre>"
-                        + "<p>This may happen if the job requires a <a href=\"https://datacleaner.org/editions\">Commercial Edition of DataCleaner</a>, or an extension that you do not have installed.</p></html>";
+                        + "</pre><p>This may happen if the job requires a "
+                        + "<a href=\"https://www.humaninference.com/en/solutions/datacleaner\">"
+                        + "Commercial Edition of DataCleaner</a>, or an extension that you do not have installed.</p>"
+                        + "</html>";
             } else {
                 message = "<html>Failed to open job because of a missing component: " + e.getMessage() + "<br/><br/>"
                         + "This may happen if the job requires an extension that you do not have installed.</html>";

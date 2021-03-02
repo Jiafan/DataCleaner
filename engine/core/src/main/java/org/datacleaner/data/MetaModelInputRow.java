@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -91,7 +91,7 @@ public final class MetaModelInputRow extends AbstractLegacyAwareInputRow {
             return false;
         }
         final Column physicalColumn = inputColumn.getPhysicalColumn();
-        final SelectItem[] selectItems = _row.getSelectItems();
+        final List<SelectItem> selectItems = _row.getSelectItems();
         for (final SelectItem selectItem : selectItems) {
             if (selectItem.getColumn() != null && selectItem.getAggregateFunction() == null) {
                 final Column column = selectItem.getColumn();
@@ -154,7 +154,7 @@ public final class MetaModelInputRow extends AbstractLegacyAwareInputRow {
     @Override
     public List<InputColumn<?>> getInputColumns() {
         final List<InputColumn<?>> result = new ArrayList<>();
-        final SelectItem[] selectItems = _row.getSelectItems();
+        final List<SelectItem> selectItems = _row.getSelectItems();
         for (final SelectItem selectItem : selectItems) {
             if (selectItem.getColumn() != null && selectItem.getAggregateFunction() == null) {
                 result.add(new MetaModelInputColumn(selectItem.getColumn()));

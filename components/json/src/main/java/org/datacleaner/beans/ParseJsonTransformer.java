@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -68,7 +68,7 @@ public class ParseJsonTransformer implements Transformer {
             return null;
         }
 
-        final ObjectReader reader = objectMapper.reader().withType(dataType);
+        final ObjectReader reader = objectMapper.reader().forType(dataType);
         return parse(jsonString, dataType, reader);
     }
 
@@ -90,7 +90,7 @@ public class ParseJsonTransformer implements Transformer {
     @Initialize
     public void init() {
         this.mapper = new ObjectMapper();
-        this.reader = mapper.reader().withType(dataType);
+        this.reader = mapper.reader().forType(dataType);
     }
 
     @Override

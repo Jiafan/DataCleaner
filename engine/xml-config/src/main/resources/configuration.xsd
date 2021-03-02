@@ -147,13 +147,6 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="remote-components" type="ab:remoteComponentsType" minOccurs="0" maxOccurs="1">
-                <annotation>
-                    <documentation>
-                        Defines connection to DC monitor which provides DataCleaner components remotely over network.
-                    </documentation>
-                </annotation>
-            </element>
         </choice>
     </complexType>
 
@@ -170,28 +163,6 @@
 					</simpleContent>
 				</complexType>
 			</element>
-		</sequence>
-	</complexType>
-
-    <complexType name="remoteComponentsType">
-        <sequence>
-            <element name="server" type="ab:remoteComponentServerType" minOccurs="1" maxOccurs="unbounded"/>
-        </sequence>
-    </complexType>
-
-    <complexType name="remoteComponentServerType">
-        <sequence>
-            <element name="name" type="string" minOccurs="0" maxOccurs="1"/>
-            <element name="url" type="string" minOccurs="0" maxOccurs="1">
-                <annotation>
-                    <documentation>
-                        Defines base URL to the DataCleaner monitor server
-                    </documentation>
-                </annotation>
-            </element>
-            <element name="security-mode" type="string" minOccurs="0" maxOccurs="1"/>
-            <element name="username" type="string" minOccurs="0" maxOccurs="1"/>
-            <element name="password" type="string" minOccurs="0" maxOccurs="1"/>
 		</sequence>
 	</complexType>
 
@@ -214,11 +185,25 @@
 						</documentation>
 					</annotation>
 				</element>
+				<element name="dynamodb-datastore" type="ab:dynamoDbDatastoreType">
+					<annotation>
+						<documentation>
+							Defines a datastore based on an AWS DynamoDB database.
+						</documentation>
+					</annotation>
+				</element>
 				<element name="csv-datastore" type="ab:csvDatastoreType">
 					<annotation>
 						<documentation>
 							Defines a datastore based on a Comma-separated
 							file.
+						</documentation>
+					</annotation>
+				</element>
+				<element name="arff-datastore" type="ab:arffDatastoreType">
+					<annotation>
+						<documentation>
+							Defines a datastore based on a .arff file.
 						</documentation>
 					</annotation>
 				</element>
@@ -234,13 +219,6 @@
 					<annotation>
 						<documentation>
 							Defines a datastore based on a SugarCRM system.
-						</documentation>
-					</annotation>
-				</element>
-				<element name="datahub-datastore" type="ab:datahubDatastoreType">
-					<annotation>
-						<documentation>
-							Defines a datastore based on DataHub.
 						</documentation>
 					</annotation>
 				</element>
@@ -342,6 +320,13 @@
 					<annotation>
 						<documentation>
 							Defines a datastore based on an XML file.
+						</documentation>
+					</annotation>
+				</element>
+				<element name="kafka-datastore" type="ab:kafkaDatastoreType">
+					<annotation>
+						<documentation>
+							Defines a datastore based on Apache Kafka.
 						</documentation>
 					</annotation>
 				</element>
@@ -472,6 +457,17 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
+		<complexType name="arffDatastoreType">
+		<complexContent>
+			<extension base="ab:abstractDatastoreType">
+				<all>
+					<element name="filename" type="string" minOccurs="1"
+						maxOccurs="1" />
+				</all>
+			</extension>
+		</complexContent>
+	</complexType>
 
 	<complexType name="salesforceDatastoreType">
 		<complexContent>
@@ -505,27 +501,6 @@
 		</complexContent>
 	</complexType>
 
-	<complexType name="datahubDatastoreType">
-		<complexContent>
-			<extension base="ab:abstractDatastoreType">
-				<all>
-					<element name="host" type="string" minOccurs="1"
-						maxOccurs="1" />
-					<element name="port" type="int" minOccurs="1"
-						maxOccurs="1" />
-					<element name="username" type="string" minOccurs="1"
-						maxOccurs="1" />
-					<element name="password" type="string" minOccurs="1"
-						maxOccurs="1" />
-				    <element name="https" minOccurs="1" maxOccurs="1" type="boolean" />
-				    <element name="acceptunverifiedsslpeers" minOccurs="1" maxOccurs="1" type="boolean" />
-				    <element name="datahubsecuritymode" type="ab:datahubsecuritymodeEnum" minOccurs="1"
-						maxOccurs="1" />
-				</all>
-			</extension>
-		</complexContent>
-
-	</complexType>
 		<complexType name="neo4jDatastoreType">
 		<complexContent>
 			<extension base="ab:abstractDatastoreType">
@@ -538,13 +513,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
-	<simpleType name="datahubsecuritymodeEnum">
-		<restriction base="string">
-			<enumeration value="CAS" />
-			<enumeration value="DEFAULT" />
-		</restriction>
-	</simpleType>
 
 	<complexType name="pojoDatastoreType">
 		<complexContent>
@@ -735,6 +703,36 @@
 			</extension>
 		</complexContent>
 	</complexType>
+	
+	<complexType name="dynamoDbDatastoreType">
+		<complexContent>
+			<extension base="ab:abstractDatastoreType">
+				<sequence>
+					<element name="region" minOccurs="1" maxOccurs="1" type="string" />
+					<element name="accessKeyId" minOccurs="1" maxOccurs="1" type="string" />
+					<element name="secretAccessKey" minOccurs="1" maxOccurs="1" type="string" />
+					<element name="table-def" minOccurs="0" maxOccurs="unbounded">
+						<complexType>
+							<sequence>
+								<element name="table-name" minOccurs="1" maxOccurs="1"
+									type="string" />
+								<element name="column" minOccurs="1" maxOccurs="unbounded">
+									<complexType>
+										<sequence>
+											<element name="name" minOccurs="1" maxOccurs="1"
+												type="string" />
+											<element name="type" minOccurs="0" maxOccurs="1"
+												type="normalizedString" />
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
 
 	<complexType name="couchdbDatastoreType">
 		<complexContent>
@@ -862,6 +860,19 @@
 							</sequence>
 						</complexType>
 					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+		<complexType name="kafkaDatastoreType">
+		<complexContent>
+			<extension base="ab:abstractDatastoreType">
+				<sequence>
+					<element name="bootstrap-servers" minOccurs="1" maxOccurs="1" type="string" />
+					<element name="topic" minOccurs="1" maxOccurs="unbounded" type="string" />
+					<element name="key-type" minOccurs="1" maxOccurs="1" type="string" />
+					<element name="value-type" minOccurs="1" maxOccurs="1" type="string" />
 				</sequence>
 			</extension>
 		</complexContent>

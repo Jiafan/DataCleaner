@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -40,12 +40,13 @@ import org.datacleaner.util.NumberDocument;
 import org.datacleaner.util.SchemaFactory;
 import org.datacleaner.util.StringUtils;
 import org.datacleaner.util.WidgetFactory;
+import org.datacleaner.util.WidgetUtils;
 import org.jdesktop.swingx.JXTextField;
 
 public class CassandraDatastoreDialog extends AbstractDatastoreDialog<CassandraDatastore> implements SchemaFactory {
 
     private static final long serialVersionUID = 1L;
-
+    
     private final JXTextField _hostnameTextField;
     private final JXTextField _portTextField;
     private final JXTextField _keyspaceTextField;
@@ -146,13 +147,8 @@ public class CassandraDatastoreDialog extends AbstractDatastoreDialog<CassandraD
     }
 
     @Override
-    protected boolean isWindowResizable() {
-        return true;
-    }
-
-    @Override
     protected int getDialogWidth() {
-        return 400;
+        return WidgetUtils.DIALOG_WIDTH_NARROW;
     }
 
     protected CassandraDatastore createDatastore() {

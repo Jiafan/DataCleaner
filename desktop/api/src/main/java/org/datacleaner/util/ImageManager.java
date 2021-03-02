@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -32,8 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.cache.Cache;
 
 /**
- * The {@link ImageManager} class serves as a utility for fetching images used
- * in DataCleaner.
+ * The {@link ImageManager} class serves as a utility for fetching images used in DataCleaner.
  */
 public final class ImageManager {
 
@@ -115,11 +114,9 @@ public final class ImageManager {
             image = getImage(imagePath, classLoaders);
             final int width = image.getWidth(null);
             final int height = image.getHeight(null);
-            if (width > newWidth) {
-                final int newHeight = newWidth * height / width;
-                image = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                _cachedImageIcons.put(imagePath + ",width=" + newWidth, image);
-            }
+            final int newHeight = newWidth * height / width;
+            image = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            _cachedImageIcons.put(imagePath + ",width=" + newWidth, image);
         }
         return image;
     }

@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -42,6 +42,7 @@ import org.apache.metamodel.util.FileResource;
 import org.apache.metamodel.util.Resource;
 import org.datacleaner.api.Alias;
 import org.datacleaner.api.Categorized;
+import org.datacleaner.api.Close;
 import org.datacleaner.api.Configured;
 import org.datacleaner.api.Description;
 import org.datacleaner.api.Distributed;
@@ -99,12 +100,14 @@ public class CreateExcelSpreadsheetAnalyzer extends AbstractOutputWriterAnalyzer
     private File _targetFile;
     private int indexOfColumnToBeSortedOn = -1;
     private boolean isColumnToBeSortedOnPresentInInput = true;
+    private boolean isTempFile = false;
 
     @Initialize
     public void initTempFile() throws Exception {
         if (_targetFile == null) {
             if (columnToBeSortedOn != null) {
                 _targetFile = File.createTempFile("csv_file_analyzer", ".csv");
+                isTempFile = true; 
             } else {
                 _targetFile = file;
             }
@@ -137,9 +140,9 @@ public class CreateExcelSpreadsheetAnalyzer extends AbstractOutputWriterAnalyzer
             final Datastore datastore =
                     new ExcelDatastore(file.getName(), new FileResource(file), file.getAbsolutePath());
             try (DatastoreConnection connection = datastore.openConnection()) {
-                final String[] tableNames = connection.getDataContext().getDefaultSchema().getTableNames();
-                for (int i = 0; i < tableNames.length; i++) {
-                    if (tableNames[i].equals(sheetName)) {
+                final List<String> tableNames = connection.getDataContext().getDefaultSchema().getTableNames();
+                for (String tableName : tableNames) {
+                    if (tableName.equals(sheetName)) {
                         throw new IllegalStateException(
                                 "The sheet '" + sheetName + "' already exists. Please select another sheet name.");
                     }
@@ -185,9 +188,9 @@ public class CreateExcelSpreadsheetAnalyzer extends AbstractOutputWriterAnalyzer
                     new ExcelDatastore(file.getName(), new FileResource(file), file.getAbsolutePath());
             try (UpdateableDatastoreConnection connection = datastore.openConnection()) {
                 final DataContext dataContext = connection.getDataContext();
-                final String[] tableNames = dataContext.getDefaultSchema().getTableNames();
-                for (int i = 0; i < tableNames.length; i++) {
-                    if (tableNames[i].equals(sheetName)) {
+                final List<String> tableNames = dataContext.getDefaultSchema().getTableNames();
+                for (String tableName : tableNames) {
+                    if (tableName.equals(sheetName)) {
                         if (overwriteSheetIfExists) {
                             final Table tableSheet = dataContext.getTableByQualifiedLabel(sheetName);
                             final UpdateableDataContext updateableDataContext = connection.getUpdateableDataContext();
@@ -286,7 +289,7 @@ public class CreateExcelSpreadsheetAnalyzer extends AbstractOutputWriterAnalyzer
 
                     @Override
                     protected void writeHeader(final ExcelDataContextWriter writer) throws IOException {
-                        final List<String> headers = new ArrayList<>(Arrays.asList(table.getColumnNames()));
+                        final List<String> headers = new ArrayList<>(table.getColumnNames());
                         if (!isColumnToBeSortedOnPresentInInput) {
                             headers.remove(columnToBeSortedOn.getName());
                         }
@@ -323,6 +326,14 @@ public class CreateExcelSpreadsheetAnalyzer extends AbstractOutputWriterAnalyzer
 
     public void setSheetName(final String sheetName) {
         this.sheetName = sheetName;
+    }
+    
+    @Close
+    public void close() {
+        // delete the temporary file
+        if (isTempFile) {
+            _targetFile.delete();
+        }
     }
 
 }

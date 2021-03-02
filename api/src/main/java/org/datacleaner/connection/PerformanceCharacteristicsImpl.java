@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -28,18 +28,6 @@ public final class PerformanceCharacteristicsImpl implements PerformanceCharacte
 
     private final boolean _queryOptimizationPreferred;
     private final boolean _naturalRecordOrderConsistent;
-
-    /**
-     *
-     * @param queryOptimizationPreferred
-     *
-     * @deprecated use {@link #PerformanceCharacteristicsImpl(boolean, boolean)}
-     *             instead.
-     */
-    @Deprecated
-    public PerformanceCharacteristicsImpl(final boolean queryOptimizationPreferred) {
-        this(queryOptimizationPreferred, true);
-    }
 
     public PerformanceCharacteristicsImpl(final boolean queryOptimizationPreferred,
             final boolean naturalRecordOrderConsistent) {

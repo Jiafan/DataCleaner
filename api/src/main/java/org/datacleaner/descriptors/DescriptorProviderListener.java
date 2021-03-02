@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -22,10 +22,6 @@ package org.datacleaner.descriptors;
 /**
  * Listener interface for objects that wish to listen in on changes to
  * descriptor providers.
- *
- * Note that descriptor providers rarely change. In the case of remote
- * descriptors they may change due to updates on the server. In case of local
- * descriptors they may change due to installed or removed extensions etc.
  */
 public interface DescriptorProviderListener {
 

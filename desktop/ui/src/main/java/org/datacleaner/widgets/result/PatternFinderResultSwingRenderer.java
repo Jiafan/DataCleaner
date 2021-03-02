@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.swing.Box;
@@ -31,7 +32,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.apache.metamodel.schema.Table;
 import org.apache.metamodel.util.LazyRef;
-import org.apache.metamodel.util.Ref;
 import org.datacleaner.api.RendererBean;
 import org.datacleaner.beans.stringpattern.PatternFinderAnalyzer;
 import org.datacleaner.beans.stringpattern.PatternFinderResult;
@@ -116,7 +116,7 @@ public class PatternFinderResultSwingRenderer extends AbstractRenderer<PatternFi
             }
             final Crosstab<?> crosstab = entry.getValue();
 
-            final Ref<JComponent> componentRef = new LazyRef<JComponent>() {
+            final Supplier<JComponent> componentRef = new LazyRef<JComponent>() {
                 @Override
                 protected JComponent fetch() {
                     logger.info("Rendering group result '{}'", groupName);

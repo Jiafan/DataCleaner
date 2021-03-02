@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -46,18 +46,6 @@ public final class TransformedInputRow extends AbstractLegacyAwareInputRow {
     private final InputRow _delegate;
     private final Map<InputColumn<?>, Object> _values;
     private final long _id;
-
-    /**
-     * Constructs a {@link TransformedInputRow} based on another row.
-     *
-     * @param delegate
-     *
-     * @deprecated use {@link TransformedInputRow#of(InputRow)} instead
-     */
-    @Deprecated
-    public TransformedInputRow(final InputRow delegate) {
-        this(delegate, null);
-    }
 
     /**
      * Constructs a {@link TransformedInputRow} based on another row and a row

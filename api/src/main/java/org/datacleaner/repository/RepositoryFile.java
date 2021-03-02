@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -21,9 +21,9 @@ package org.datacleaner.repository;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.Function;
 
 import org.apache.metamodel.util.Action;
-import org.apache.metamodel.util.Func;
 import org.apache.metamodel.util.Resource;
 
 /**
@@ -43,7 +43,7 @@ public interface RepositoryFile extends RepositoryNode {
      *
      * @return an {@link InputStream} to read from the file.
      * @deprecated prefer to use {@link #readFile(Action)} or
-     *             {@link #readFile(Func)} instead.
+     *             {@link #readFile(Function)} instead.
      */
     @Deprecated
     InputStream readFile();
@@ -106,7 +106,7 @@ public interface RepositoryFile extends RepositoryNode {
      * @param readCallback
      * @return the result of the function
      */
-    <E> E readFile(Func<InputStream, E> readCallback);
+    <E> E readFile(Function<InputStream, E> readCallback);
 
     /**
      * Gets the type of the file.

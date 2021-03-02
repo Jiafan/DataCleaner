@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -205,7 +205,7 @@ public class DeleteFromTableAnalyzer
             // nothing to worry about, we will create the table ourselves
             return;
         }
-        final Table table = schema.getTables()[0];
+        final Table table = schema.getTable(0);
 
         // verify that table names correspond to what we need!
 
@@ -377,7 +377,7 @@ public class DeleteFromTableAnalyzer
         } else {
             logger.warn("Error occurred while deleting record. Writing to error stream", e);
             _errorDataContext.executeUpdate(cb -> {
-                RowInsertionBuilder insertBuilder = cb.insertInto(_errorDataContext.getDefaultSchema().getTables()[0]);
+                RowInsertionBuilder insertBuilder = cb.insertInto(_errorDataContext.getDefaultSchema().getTable(0));
 
                 insertBuilder = insertBuilder.value(ERROR_MESSAGE_COLUMN_NAME, e.getMessage());
                 insertBuilder.execute();

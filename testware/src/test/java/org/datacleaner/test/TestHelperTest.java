@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -19,7 +19,7 @@
  */
 package org.datacleaner.test;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.datacleaner.connection.Datastore;
 import org.datacleaner.connection.DatastoreConnection;
@@ -33,9 +33,9 @@ public class TestHelperTest extends TestCase {
         assertEquals("foo", ds.getName());
 
         final DatastoreConnection con = ds.openConnection();
-        final String[] tableNames = con.getSchemaNavigator().getDefaultSchema().getTableNames();
+        final List<String> tableNames = con.getSchemaNavigator().getDefaultSchema().getTableNames();
         assertEquals("[CUSTOMERS, EMPLOYEES, OFFICES, ORDERDETAILS, ORDERFACT, ORDERS, PAYMENTS, PRODUCTS]",
-                Arrays.toString(tableNames));
+                tableNames.toString());
 
         con.close();
     }

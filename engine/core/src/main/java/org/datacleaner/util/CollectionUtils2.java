@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -25,11 +25,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import org.apache.metamodel.util.CollectionUtils;
-import org.apache.metamodel.util.Predicate;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -122,20 +121,6 @@ public final class CollectionUtils2 {
         final List<E> list = new ArrayList<>(col);
         Collections.sort(list);
         return list;
-    }
-
-    /**
-     *
-     * @return
-     *
-     * @deprecated use Google Guava's {@link CacheBuilder},
-     *             {@link #createCache(int, long)} or something similar if
-     *             needed.
-     */
-    @Deprecated
-    public static <K, V> ConcurrentMap<K, V> createCacheMap() {
-        final Cache<K, V> cache = CacheBuilder.newBuilder().maximumSize(10000).build();
-        return cache.asMap();
     }
 
     /**

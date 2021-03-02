@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -35,7 +35,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -44,6 +43,7 @@ import javax.swing.text.SimpleAttributeSet;
 import org.datacleaner.connection.Datastore;
 import org.datacleaner.guice.InjectorBuilder;
 import org.datacleaner.util.DCDocumentListener;
+import org.datacleaner.util.WidgetScreenResolutionAdjuster;
 import org.datacleaner.util.WidgetUtils;
 import org.datacleaner.widgets.LoadingIcon;
 import org.datacleaner.widgets.tree.SchemaTree;
@@ -62,10 +62,12 @@ public class SchemaTreePanel extends DCPanel {
 
     private static final long serialVersionUID = 1L;
 
+    private static final WidgetScreenResolutionAdjuster adjuster = WidgetScreenResolutionAdjuster.get();
     private static final Logger logger = LoggerFactory.getLogger(SchemaTreePanel.class);
 
     private static final String DEFAULT_SEARCH_FIELD_TEXT = "Search component library...";
 
+    private static final int LOADER_WIDTH = adjuster.adjust(150);
     private final InjectorBuilder _injectorBuilder;
     private final JXTextField _searchTextField;
     private final JComponent _resetSearchButton;
@@ -80,7 +82,7 @@ public class SchemaTreePanel extends DCPanel {
         _resetSearchButton = createResetSearchButton();
 
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(4, 4, 4, 4));
+        setBorder(WidgetUtils.BORDER_EMPTY);
         setDatastore(null, false);
 
         setFocusable(true);
@@ -103,11 +105,11 @@ public class SchemaTreePanel extends DCPanel {
     public void setDatastore(final Datastore datastore, final boolean expandTree) {
         removeAll();
         if (datastore == null) {
-            add(new DCPanel().setPreferredSize(150, 150), BorderLayout.CENTER);
+            add(new DCPanel().setPreferredSize(LOADER_WIDTH, LOADER_WIDTH), BorderLayout.CENTER);
             return;
         }
 
-        add(new LoadingIcon().setPreferredSize(150, 150), BorderLayout.CENTER);
+        add(new LoadingIcon().setPreferredSize(LOADER_WIDTH, LOADER_WIDTH), BorderLayout.CENTER);
 
         // load the schema tree in the background because it will retrieve
         // metadata about the datastore (might take several seconds)

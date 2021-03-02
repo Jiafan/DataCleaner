@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -77,6 +77,7 @@ import org.datacleaner.util.IconUtils;
 import org.datacleaner.util.ImageManager;
 import org.datacleaner.util.SchemaComparator;
 import org.datacleaner.util.StringUtils;
+import org.datacleaner.util.WidgetScreenResolutionAdjuster;
 import org.datacleaner.util.WidgetUtils;
 import org.datacleaner.widgets.DCLabel;
 import org.datacleaner.widgets.DescriptorMenuBuilder;
@@ -92,6 +93,8 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Injector;
 
 public class SchemaTree extends JXTree implements TreeWillExpandListener, TreeCellRenderer, DescriptorProviderListener {
+    
+    private final WidgetScreenResolutionAdjuster adjuster = WidgetScreenResolutionAdjuster.get();
 
     class LoadTablesSwingWorker extends SwingWorker<Void, Table> {
 
@@ -116,7 +119,7 @@ public class SchemaTree extends JXTree implements TreeWillExpandListener, TreeCe
                 return;
             }
             final Schema schema = (Schema) _schemaNode.getUserObject();
-            final Table[] tables = schema.getTables();
+            final List<Table> tables = schema.getTables();
             for (final Table table : tables) {
                 final String name = table.getName();
                 logger.debug("Building table node: {}", name);
@@ -131,7 +134,7 @@ public class SchemaTree extends JXTree implements TreeWillExpandListener, TreeCe
         @Override
         protected Void doInBackground() throws Exception {
             final Schema schema = (Schema) _schemaNode.getUserObject();
-            final Table[] tables = schema.getTables();
+            final List<Table> tables = schema.getTables();
             for (final Table table : tables) {
                 final String name = table.getName();
                 logger.debug("Publishing table name: {}", name);
@@ -169,7 +172,7 @@ public class SchemaTree extends JXTree implements TreeWillExpandListener, TreeCe
         @Override
         protected Void doInBackground() throws Exception {
             final Table table = (Table) _tableNode.getUserObject();
-            final Column[] columns = table.getColumns();
+            final List<Column> columns = table.getColumns();
             for (final Column column : columns) {
                 final String name = column.getName();
                 logger.debug("Publishing column name: {}", name);
@@ -232,13 +235,16 @@ public class SchemaTree extends JXTree implements TreeWillExpandListener, TreeCe
         setCellRenderer(this);
         setOpaque(false);
         setRootVisible(false);
-        setRowHeight(22);
+        setRowHeight(adjuster.adjust(22));
         addTreeWillExpandListener(this);
         setDragEnabled(true);
         setTransferHandler(DragDropUtils.createSourceTransferHandler());
     }
 
     private static String normalizeStringForMatching(final String str) {
+        if (str == null) {
+            return "";
+        }
         return StringUtils.replaceWhitespaces(str, "").toLowerCase();
     }
 
@@ -452,6 +458,11 @@ public class SchemaTree extends JXTree implements TreeWillExpandListener, TreeCe
 
         final String displayName = normalizeStringForMatching(componentDescriptor.getDisplayName());
         if (displayName.contains(searchTerm)) {
+            return true;
+        }
+
+        final String description = normalizeStringForMatching(componentDescriptor.getDescription());
+        if (description.contains(searchTerm)) {
             return true;
         }
 

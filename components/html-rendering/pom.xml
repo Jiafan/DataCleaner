@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.eobjects.datacleaner</groupId>
 		<artifactId>DataCleaner-components</artifactId>
-		<version>5.1.6-SNAPSHOT</version>
+		<version>5.7.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>DataCleaner-html-rendering</artifactId>
 	<build>
@@ -16,18 +16,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<executions>
-					<execution>
-						<id>add-scala-main-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/scala</source>
-							</sources>
-						</configuration>
-					</execution>
 					<execution>
 						<id>add-scala-test-source</id>
 						<phase>generate-sources</phase>
@@ -49,10 +37,12 @@
 		<dependency>
 			<groupId>org.scala-lang</groupId>
 			<artifactId>scala-library</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.scala-lang.modules</groupId>
-			<artifactId>scala-xml_2.11</artifactId>
+			<artifactId>scala-xml_2.12</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>

@@ -1,6 +1,6 @@
 /**
  * DataCleaner (community edition)
- * Copyright (C) 2014 Neopost - Customer Information Management
+ * Copyright (C) 2014 Free Software Foundation, Inc.
  *
  * This copyrighted material is made available to anyone wishing to use, modify,
  * copy, or redistribute it subject to the terms and conditions of the GNU
@@ -51,7 +51,7 @@ public class CreateExcelSpreadsheetAnalyzerIT {
         jobBuilder.setDatastore(datastore);
 
         final Table datastoreTableDefinition =
-                datastore.openConnection().getDataContext().getDefaultSchema().getTables()[0];
+                datastore.openConnection().getDataContext().getDefaultSchema().getTable(0);
 
         jobBuilder.addSourceColumns(datastoreTableDefinition.getColumns());
 
@@ -94,7 +94,7 @@ public class CreateExcelSpreadsheetAnalyzerIT {
 
         excelWriter.addInputColumns(jobBuilder.getAvailableInputColumns(excelWriter));
         excelWriter.setConfiguredProperty(AbstractOutputWriterAnalyzer.PROPERTY_FIELD_NAMES,
-                datastoreTableDefinition.getColumnNames());
+                datastoreTableDefinition.getColumnNames().toArray(new String[0]));
         excelWriter.setConfiguredProperty(CreateExcelSpreadsheetAnalyzer.PROPERTY_FILE, excelFile);
         excelWriter.setConfiguredProperty(CreateExcelSpreadsheetAnalyzer.PROPERTY_SHEET_NAME, outputStreamName);
         excelWriter.setConfiguredProperty(CreateExcelSpreadsheetAnalyzer.PROPERTY_OVERWRITE_SHEET_IF_EXISTS, true);
